@@ -1,3 +1,5 @@
+#SingleInstance force ; allow only one instance of this script to be running
+
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; if mouse is over the taskbar
 RButton:: ; replace right click with the following commands
 MouseClick, right ; right click
