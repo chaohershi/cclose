@@ -1,4 +1,4 @@
-#SingleInstance force ; allow only one instance of this script to be running
+#SingleInstance ignore ; allow only one instance of this script to be running
 ; add tray menu
 Menu, Tray, Icon, , , 1
 Menu, Tray, NoStandard
