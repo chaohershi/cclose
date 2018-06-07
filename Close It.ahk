@@ -1,15 +1,55 @@
 #SingleInstance force ; allow only one instance of this script to be running
-
+; add tray menu
 Menu, Tray, Icon, , , 1
 Menu, Tray, NoStandard
+Menu, Tray, Add, Autostart, AutostartProgram
 Menu, Tray, Add, Suspend, SuspendProgram
 Menu, Tray, Add, Exit, ExitProgram
 
+; add shortcut to Startup folder
+SplitPath, A_Scriptname, , , , OutNameNoExt
+LinkFile := A_Startup . "\" . OutNameNoExt . ".lnk"
+if A_IsAdmin {
+	FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%
+}
+Autostart := FileExist(LinkFile)
+if Autostart {
+	Menu, Tray, Check, Autostart
+}
+
 Return ; end of auto-execute section
 
+AutostartProgram:
+if Autostart {
+	Menu, Tray, Uncheck, Autostart
+	FileDelete, %LinkFile%
+	Autostart := false
+} else {
+	; run as administrator
+	full_command_line := DllCall("GetCommandLine", "str")
+	if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)")) {
+		MsgBox, Close It will need your premission to create a shortcut in the Windows Startup folder.
+		try {
+			if A_IsCompiled {
+				Run *RunAs "%A_ScriptFullPath%" /restart
+			} else {
+				Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
+			}
+			ExitApp
+		}
+	} else {
+		if A_IsAdmin {
+			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%
+			Menu, Tray, Check, Autostart
+			Autostart := true
+		}
+	}
+}
+Return
+
 SuspendProgram:
-Suspend, Toggle
 Menu, Tray, ToggleCheck, Suspend
+Suspend, Toggle
 Return
 
 ExitProgram:
