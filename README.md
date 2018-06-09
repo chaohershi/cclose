@@ -3,9 +3,9 @@ Close It is a tiny Windows utility written in [AutoHotkey](https://autohotkey.co
 ![Close It Demo](Close%20It%20Demo.gif)
 
 ## Download ##
-You can download the compiled standalone executable `Close It.exe` [here](../../releases/latest). No installation required.
+You can download the compiled standalone executable `Close It.exe` [here](https://github.com/chaohershi/Close-It/releases/latest). No installation required.
 
-Alternatively, you can download and run the script `Close It.ahk` having AutoHotkey installed.
+Alternatively, you can download the source code and run the script `Close It.ahk` having AutoHotkey installed.
 
 **Please be aware that if you choose to download and run the executable, you will get warnings from your web browser and Windows SmartScreen.** This is totally normal as the the file is not signed (purchasing trusted code signing certificate would cost a lot of $$$). Nevertheless, the file contains no virus and is 100% safe. Feel free to do a virus scan if you are still worried! Of which I recommend [VirusTotal](https://www.virustotal.com/).
 
