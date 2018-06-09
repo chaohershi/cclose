@@ -1,4 +1,3 @@
-## Intro ##
 Close It is a tiny Windows utility written in [AutoHotkey](https://autohotkey.com/). It helps you close window faster by moving your pointer to "Close Window/Close all windows" automatically when you right click on a taskbar button.  
 ![Close It Demo](Close%20It%20Demo.gif)
 
