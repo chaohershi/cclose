@@ -70,7 +70,7 @@ Return
 ExitProgram:
 ExitApp
 
-#If MouseIsOver("ahk_class Shell_TrayWnd") ; active the following hotkey only if mouse is over the taskbar
+#If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only if the mouse is over the taskbar
 ~RButton:: ; when right clicked
 sleep 350 ; wait for the Jump List to pop up (if clicked on apps)
 
@@ -84,4 +84,18 @@ MouseIsOver(WinTitle)
 {
 	MouseGetPos, , , Win
 	Return WinExist(WinTitle . " ahk_id " . Win)
+}
+
+#If ; apply the following hotkey with no conditions
+~Esc::
+if (A_TimeSincePriorHotkey < 400) and (A_PriorHotkey = "~Esc") ; if double press Esc
+{
+	KeyWait, Esc ; wait for Esc to be released
+	WinGetClass, class, A
+	if class in Shell_TrayWnd,Progman,WorkerW
+	{
+		Return ; do nothing if the active window is taskbar or desktop
+	}
+	WinClose, A ; close active window
+	Return
 }
