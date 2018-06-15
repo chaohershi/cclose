@@ -1,4 +1,5 @@
 #SingleInstance ignore ; allow only one instance of this script to be running
+
 ; add tray menu
 Menu, Tray, Icon, , , 1
 Menu, Tray, NoStandard
@@ -70,20 +71,37 @@ Return
 ExitProgram:
 ExitApp
 
+MouseIsOver(WinTitle)
+{
+	MouseGetPos, , , Win
+	Return WinExist(WinTitle . " ahk_id " . Win)
+}
+
+MouseIsOverTitlebar()
+{
+	static WM_NCHITTEST := 0x84, HTCAPTION := 2
+	CoordMode, Mouse, Screen
+	MouseGetPos, x, y, w
+	if WinExist("ahk_class Shell_TrayWnd ahk_id " w) ; exclude taskbar
+		Return false
+	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %w%
+	WinExist("ahk_id " w) ; set Last Found Window for convenience
+	Return ErrorLevel = HTCAPTION
+}
+
+; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
+#If MouseIsOverTitlebar()
+RButton::WinMinimize
+MButton::WinClose
+
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only if the mouse is over the taskbar
 ~RButton:: ; when right clicked
-sleep 350 ; wait for the Jump List to pop up (if clicked on apps)
+Sleep 350 ; wait for the Jump List to pop up (if clicked on apps)
 
 if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up
 {
 	WinGetPos, , , width, height, A ; get active window (Jump List) position
 	MouseMove, (width - 128), (height - 24), 1 ; move mouse to the bottom of the Jump List (Close window)
-}
-
-MouseIsOver(WinTitle)
-{
-	MouseGetPos, , , Win
-	Return WinExist(WinTitle . " ahk_id " . Win)
 }
 
 #If ; apply the following hotkey with no conditions
