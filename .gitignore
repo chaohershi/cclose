@@ -1,0 +1,6 @@
+# Configuration file for Compile AHK
+# https://autohotkey.com/board/topic/21189-compile-ahk-ii-for-those-who-compile/
+Close It.ahk.ini
+
+# Compiled executable
+Close It.exe
