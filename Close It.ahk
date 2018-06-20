@@ -71,38 +71,66 @@ Return
 ExitProgram:
 ExitApp
 
+RemoveToolTip:
+SetTimer, RemoveToolTip, Off
+ToolTip
+Return
+
 MouseIsOver(WinTitle)
 {
-	MouseGetPos, , , Win
-	Return WinExist(WinTitle . " ahk_id " . Win)
+	MouseGetPos, , , win
+	Return, WinExist(WinTitle . " ahk_id " . win)
 }
 
 MouseIsOverTitlebar()
 {
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
 	CoordMode, Mouse, Screen
-	MouseGetPos, x, y, w
-	if WinExist("ahk_class Shell_TrayWnd ahk_id " w) ; exclude taskbar
-		Return false
-	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %w%
-	WinExist("ahk_id " w) ; set Last Found Window for convenience
-	Return ErrorLevel = HTCAPTION
+	MouseGetPos, x, y, win
+	if WinExist("ahk_class Shell_TrayWnd ahk_id " win) ; exclude the taskbar
+	{
+		Return, false
+	}
+	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
+	WinExist("ahk_id " win) ; set Last Found Window for convenience
+	Return, ErrorLevel = HTCAPTION
 }
 
-; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
-#If MouseIsOverTitlebar()
-RButton::WinMinimize
-MButton::WinClose
-
-#If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only if the mouse is over the taskbar
+#If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
 Sleep 350 ; wait for the Jump List to pop up (if clicked on apps)
-
 if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up
 {
 	WinGetPos, , , width, height, A ; get active window (Jump List) position
 	MouseMove, (width - 128), (height - 24), 1 ; move mouse to the bottom of the Jump List (Close window)
 }
+Return
+
+; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
+#If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
+RButton::WinMinimize
+MButton::WinClose
+~LButton::
+CoordMode, Mouse, Screen
+MouseGetPos, xOld, yOld
+WinGet, ExStyle, ExStyle ; get extended window style
+if (ExStyle & 0x8) ; 0x8 is WS_EX_TOPMOST
+{
+	ExStyle = Not always on top
+}
+else
+{
+	ExStyle = Always on top
+}
+KeyWait, LButton, T1 ; wait for left mouse button to release with timeout set to 1 second
+MouseGetPos, xNew, yNew
+if % (xOld == xNew) && (yOld == yNew) && ErrorLevel ; if mouse did not move and long clicked
+{
+	Winset, Alwaysontop, Toggle, A ; toggle always on top
+	ToolTip, %ExStyle%, 7, -25 ; display a tooltip with current topmost status
+	SetTimer, RemoveToolTip, 1000 ; remove the tooltip after 1 second
+}
+Return
 
 #If ; apply the following hotkey with no conditions
 ~Esc::
@@ -115,5 +143,5 @@ if (A_TimeSincePriorHotkey < 400) and (A_PriorHotkey = "~Esc") ; if double press
 		Return ; do nothing if the active window is taskbar or desktop
 	}
 	WinClose, A ; close active window
-	Return
 }
+Return
