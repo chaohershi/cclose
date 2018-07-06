@@ -121,7 +121,16 @@ Return
 ; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
 #If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
 RButton::WinMinimize
-MButton::WinClose
+MButton::
+if MouseIsOver("ahk_class Chrome_WidgetWin_1") or MouseIsOver("ahk_class MozillaWindowClass") ; if on Chrome and Firefox
+{
+	Return ; disable middle click to close windows
+}
+else
+{
+	WinClose
+}
+Return
 ~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
