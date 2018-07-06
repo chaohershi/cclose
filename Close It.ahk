@@ -5,6 +5,8 @@ Menu, Tray, Icon, , , 1
 Menu, Tray, NoStandard
 Menu, Tray, Add, Autostart, AutostartProgram
 Menu, Tray, Add, Suspend, SuspendProgram
+Menu, Tray, Add
+Menu, Tray, Add, Help, HelpMsg
 Menu, Tray, Add, Exit, ExitProgram
 
 ; add shortcut to Startup folder
@@ -68,6 +70,16 @@ Menu, Tray, ToggleCheck, Suspend
 Suspend, Toggle
 Return
 
+HelpMsg:
+MsgBox,
+(
+
+Middle click 	+ title bar 	= close window.
+Right click 	+ title bar 	= minize window.
+Left click and hold + title bar 	= toggle window always on top.
+Right click 	+ taskbar button 	= pointer moves to "Close window".
+)
+
 ExitProgram:
 ExitApp
 
@@ -98,7 +110,7 @@ MouseIsOverTitlebar()
 
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
-Sleep 350 ; wait for the Jump List to pop up (if clicked on apps)
+Sleep 500 ; wait for the Jump List to pop up (if clicked on apps)
 if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up
 {
 	WinGetPos, , , width, height, A ; get active window (Jump List) position
