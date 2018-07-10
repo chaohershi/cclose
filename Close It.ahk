@@ -77,6 +77,7 @@ MsgBox,
 Middle click 	+ title bar 	= close window.
 Right click 	+ title bar 	= minize window.
 Left click and hold + title bar 	= toggle window always on top.
+Double press 	+ Esc key 	= close active window.
 Right click 	+ taskbar button 	= pointer moves to "Close window".
 )
 

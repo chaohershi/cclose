@@ -1,8 +1,23 @@
-Close It is a tiny Windows utility written in [AutoHotkey](https://autohotkey.com/). It helps you close window faster by moving your pointer to "Close Window/Close all windows" automatically when you right click on a taskbar button.  
-![Close It Demo](Close%20It%20Demo.gif)
+Close It is a tiny Windows utility written in [AutoHotkey](https://autohotkey.com/). It helps you close windows faster or pin windows always on top.
+
+## Feature ##
+- Middle click + title bar = close window.  
+![Close It Demo](Demo_MC_Close.gif)
+
+- Right click + title bar = minize window.  
+![Close It Demo](Demo_RC_Minize.gif)
+
+- Left click and hold + title bar = toggle window always on top.  
+![Close It Demo](Demo_LCH_Pin.gif)
+
+- Double press + Esc key = close active window.  
+![Close It Demo](Demo_Esc_Close.gif)
+
+- Right click + taskbar button = pointer moves to "Close window".  
+![Close It Demo](Demo_RC_Pointer.gif)
 
 ## Download ##
-You can download the compiled standalone executable `Close It.exe` [here](https://github.com/chaohershi/Close-It/releases/latest). No installation required.
+You can download the compiled standalone executable `Close It.exe` [here](https://github.com/chaohershi/Close-It/releases). No installation required.
 
 Alternatively, you can download the source code and run the script `Close It.ahk` having AutoHotkey installed.
 
