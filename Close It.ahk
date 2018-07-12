@@ -71,15 +71,15 @@ Suspend, Toggle
 Return
 
 HelpMsg:
-MsgBox,
+MsgBox, 0, Help,
 (
-
 Middle click 	+ title bar 	= close window.
 Right click 	+ title bar 	= minize window.
-Left click and hold + title bar 	= toggle window always on top.
-Double press 	+ Esc key 	= close active window.
+Hold left click 	+ title bar 	= toggle window always on top.
+Double press 	+ Esc key  	= close active window.
 Right click 	+ taskbar button 	= pointer moves to "Close window".
 )
+Return
 
 ExitProgram:
 ExitApp
@@ -123,9 +123,9 @@ Return
 #If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
 RButton::WinMinimize
 MButton::
-if MouseIsOver("ahk_class Chrome_WidgetWin_1") or MouseIsOver("ahk_class MozillaWindowClass") ; if on Chrome and Firefox
+if MouseIsOver("ahk_class Chrome_WidgetWin_1") or MouseIsOver("ahk_class MozillaWindowClass") ; exclude Chrome and Firefox
 {
-	Return ; disable middle click to close windows
+	Return
 }
 else
 {
