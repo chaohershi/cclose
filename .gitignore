@@ -1,6 +1,14 @@
-# Configuration file for Compile AHK
-# https://autohotkey.com/board/topic/21189-compile-ahk-ii-for-those-who-compile/
+# configuration file for Compile AHK https://autohotkey.com/boards/viewtopic.php?f=6&t=16061
 Close It.ahk.ini
 
-# Compiled executable
+# compiled executable
 Close It.exe
+
+# batch file for code signing
+Sign File.bat
+
+# configuration file for Actual Installer
+Close It.aip
+
+# installer
+Close It Setup.exe
