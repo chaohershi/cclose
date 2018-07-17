@@ -1,3 +1,4 @@
+#NoEnv
 #SingleInstance ignore ; allow only one instance of this script to be running
 
 ; add tray menu
@@ -8,59 +9,115 @@ Menu, Tray, Add, Suspend, SuspendProgram
 Menu, Tray, Add
 Menu, Tray, Add, Help, HelpMsg
 Menu, Tray, Add, Exit, ExitProgram
+Menu, Tray, Tip, Close It
 
-; add shortcut to Startup folder
-SplitPath, A_Scriptname, , , , OutNameNoExt
-LinkFile := A_Startup . "\" . OutNameNoExt . ".lnk"
-if A_IsAdmin
+SplitPath, A_Scriptname, , , , ScriptNameNoExt
+IniDir := A_AppDataCommon . "\" . ScriptNameNoExt
+IniFile := IniDir . "\" . ScriptNameNoExt . ".ini"
+IniRead, IsAutostart, %IniFile%, setting, autostart ; retrieve autostart setting, the result can be on of the following: true/false/ERROR
+IsAutostart := %IsAutostart% ; ensure the keyword true/false is saved, instead of the string "true/false"
+
+if A_IsAdmin ; if run as administrator
 {
-	FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%
+	if (IsAutostart = true)
+	{
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt%, %A_ScriptFullPath% ; enable autostart
+	}
+	else if (IsAutostart = false)
+	{
+		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt% ; disable autostart
+	}
+	; else in case of ERROR, do nothing
 }
 
-; check Autostart menu if shortcut exists in Startup folder
-IsAutostart := FileExist(LinkFile)
+; update Autostart menu
+RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt% ; retrieve autostart status
+if (RegValue=A_ScriptFullPath) ; if autostart is enabled
+{
+	Menu, Tray, Check, Autostart ; check Autostart menu
+	IsAutostart := true
+}
+else
+{
+	Menu, Tray, Uncheck, Autostart ; uncheck Autostart menu
+	IsAutostart := false
+}
+
+; update autostart setting
+if !InStr(FileExist(IniDir), "D") ; ensure IniDir exists
+{
+	FileCreateDir, %IniDir%
+}
 if IsAutostart
 {
-	Menu, Tray, Check, Autostart
+	IniWrite, true, %IniFile%, setting, autostart
+}
+else
+{
+	IniWrite, false, %IniFile%, setting, autostart
 }
 
 Return ; end of auto-execute section
 
 AutostartProgram:
-if IsAutostart
+if A_IsAdmin ; if run as administrator, update menu, setting file, and registry
 {
-	Menu, Tray, Uncheck, Autostart ; uncheck Autostart menu
-	FileDelete, %LinkFile% ; delete shortcut
-	IsAutostart := false
-}
-else
-{
-	; restart and try run as administrator
-	full_command_line := DllCall("GetCommandLine", "str")
-	if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
+	if IsAutostart
 	{
-		MsgBox, Close It will need your premission to create a shortcut in the Windows Startup folder.
-		try
-		{
-			if A_IsCompiled
-			{
-				Run *RunAs "%A_ScriptFullPath%" /restart
-			}
-			else
-			{
-				Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
-			}
-			ExitApp
-		}
+		Menu, Tray, Uncheck, Autostart
+		IniWrite, false, %IniFile%, setting, autostart
+		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt% ; disable autostart
+		IsAutostart := false
 	}
 	else
 	{
-		if A_IsAdmin
+		Menu, Tray, Check, Autostart
+		IniWrite, true, %IniFile%, setting, autostart
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt%, %A_ScriptFullPath% ; enable autostart
+		IsAutostart := true
+	}
+}
+else ; else update setting file only
+{
+	if IsAutostart
+	{
+		IniWrite, false, %IniFile%, setting, autostart
+	}
+	else
+	{
+		IniWrite, true, %IniFile%, setting, autostart
+	}
+}
+
+; try restart the script and run as administrator
+; https://autohotkey.com/docs/commands/Run.htm#RunAs
+full_command_line := DllCall("GetCommandLine", "str")
+if !(A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
+{
+	try
+	{
+		if A_IsCompiled
 		{
-			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%
-			Menu, Tray, Check, Autostart
-			IsAutostart := true
+			Run *RunAs "%A_ScriptFullPath%" /restart
 		}
+		else
+		{
+			Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
+		}
+		ExitApp
+	}
+}
+
+; if run as administrator failed, rollback the autostart setting
+if !A_IsAdmin
+{
+	if IsAutostart
+	{
+		IniWrite, true, %IniFile%, setting, autostart
+	}
+	else
+	{
+		IniWrite, false, %IniFile%, setting, autostart
 	}
 }
 Return
@@ -100,9 +157,9 @@ MouseIsOverTitlebar()
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
 	CoordMode, Mouse, Screen
 	MouseGetPos, x, y, win
-	if WinExist("ahk_class Shell_TrayWnd ahk_id " win) ; exclude the taskbar
+	if WinExist("ahk_class Shell_TrayWnd ahk_id " win) || WinExist("ahk_class Chrome_WidgetWin_1 ahk_id " win) || WinExist("ahk_class MozillaWindowClass ahk_id " win) ; exclude taskbar, Chrome, and Firefox
 	{
-		Return, false
+		Return
 	}
 	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
 	WinExist("ahk_id " win) ; set Last Found Window for convenience
@@ -122,16 +179,7 @@ Return
 ; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
 #If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
 RButton::WinMinimize
-MButton::
-if MouseIsOver("ahk_class Chrome_WidgetWin_1") or MouseIsOver("ahk_class MozillaWindowClass") ; exclude Chrome and Firefox
-{
-	Return
-}
-else
-{
-	WinClose
-}
-Return
+MButton::WinClose
 ~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
