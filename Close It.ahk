@@ -1,19 +1,23 @@
 #NoEnv
 #SingleInstance ignore ; allow only one instance of this script to be running
 
+SetWorkingDir %A_ScriptDir%
+ScriptName := "Close It"
+
 ; add tray menu
-Menu, Tray, Icon, , , 1
-Menu, Tray, NoStandard
+Menu, Tray, Icon, , , 1 ; freeze the icon
+Menu, Tray, NoStandard ; remove the standard menu items
 Menu, Tray, Add, Autostart, AutostartProgram
 Menu, Tray, Add, Suspend, SuspendProgram
 Menu, Tray, Add
 Menu, Tray, Add, Help, HelpMsg
+Menu, Tray, Add, About, AboutMsg
+Menu, Tray, Add
 Menu, Tray, Add, Exit, ExitProgram
-Menu, Tray, Tip, Close It
+Menu, Tray, Tip, %ScriptName% ; changes the tray icon's tooltip
 
-SplitPath, A_Scriptname, , , , ScriptNameNoExt
-IniDir := A_AppDataCommon . "\" . ScriptNameNoExt
-IniFile := IniDir . "\" . ScriptNameNoExt . ".ini"
+IniDir := A_AppDataCommon . "\" . ScriptName
+IniFile := IniDir . "\" . ScriptName . ".ini"
 IniRead, IsAutostart, %IniFile%, setting, autostart ; retrieve autostart setting, the result can be on of the following: true/false/ERROR
 IsAutostart := %IsAutostart% ; ensure the keyword true/false is saved, instead of the string "true/false"
 
@@ -21,17 +25,17 @@ if A_IsAdmin ; if run as administrator
 {
 	if (IsAutostart = true)
 	{
-		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt%, %A_ScriptFullPath% ; enable autostart
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
 	}
 	else if (IsAutostart = false)
 	{
-		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt% ; disable autostart
+		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
 	}
 	; else in case of ERROR, do nothing
 }
 
 ; update Autostart menu
-RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt% ; retrieve autostart status
+RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve autostart status
 if (RegValue=A_ScriptFullPath) ; if autostart is enabled
 {
 	Menu, Tray, Check, Autostart ; check Autostart menu
@@ -43,11 +47,13 @@ else
 	IsAutostart := false
 }
 
-; update autostart setting
-if !InStr(FileExist(IniDir), "D") ; ensure IniDir exists
+; ensure IniDir exists
+if !InStr(FileExist(IniDir), "D")
 {
 	FileCreateDir, %IniDir%
 }
+
+; update autostart setting
 if IsAutostart
 {
 	IniWrite, true, %IniFile%, setting, autostart
@@ -57,23 +63,23 @@ else
 	IniWrite, false, %IniFile%, setting, autostart
 }
 
-Return ; end of auto-execute section
+Return ; end of the auto-execute section
 
 AutostartProgram:
-if A_IsAdmin ; if run as administrator, update menu, setting file, and registry
+if A_IsAdmin ; if run the script as administrator, then update menu, setting file, and registry
 {
 	if IsAutostart
 	{
 		Menu, Tray, Uncheck, Autostart
 		IniWrite, false, %IniFile%, setting, autostart
-		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt% ; disable autostart
+		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
 		IsAutostart := false
 	}
 	else
 	{
 		Menu, Tray, Check, Autostart
 		IniWrite, true, %IniFile%, setting, autostart
-		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptNameNoExt%, %A_ScriptFullPath% ; enable autostart
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
 		IsAutostart := true
 	}
 }
@@ -89,7 +95,7 @@ else ; else update setting file only
 	}
 }
 
-; try restart the script and run as administrator
+; try restart and run the script as administrator
 ; https://autohotkey.com/docs/commands/Run.htm#RunAs
 full_command_line := DllCall("GetCommandLine", "str")
 if !(A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
@@ -138,6 +144,31 @@ Right click 	+ taskbar button 	= pointer moves to "Close window".
 )
 Return
 
+AboutMsg:
+OnMessage(0x44, "WM_COMMNOTIFY") ; https://autohotkey.com/board/topic/56272-msgbox-button-label-change/?p=353457
+MsgBox, 257, About,
+(
+%ScriptName% 1.3.3.0
+
+Copyright (c) 2018 Chaohe Shi
+)
+IfMsgBox, OK
+{
+	if FileExist("Updater.exe")
+	{
+		TrayTip, %ScriptName%, Checking for updates...
+		Run %A_ScriptDir%\Updater.exe /A
+		Sleep 1000
+		WinWait, ahk_exe Updater.exe, , 20
+		HideTrayTip() ; https://autohotkey.com/docs/commands/TrayTip.htm#Remarks
+	}
+	else
+	{
+		MsgBox, 48, %ScriptName%, Updater not found!
+	}
+}
+Return
+
 ExitProgram:
 ExitApp
 
@@ -145,6 +176,31 @@ RemoveToolTip:
 SetTimer, RemoveToolTip, Off
 ToolTip
 Return
+
+WM_COMMNOTIFY(wParam)
+{
+	if (wParam = 1027) ; AHK_DIALOG
+	{
+		Process, Exist
+		DetectHiddenWindows, On
+		if WinExist("About ahk_class #32770 ahk_pid " . ErrorLevel)
+		{
+			ControlSetText, Button1, &Update
+			ControlSetText, Button2, &Close
+		}
+	}
+}
+
+HideTrayTip()
+{
+	TrayTip ; attempt to hide TrayTip in the normal way
+	if SubStr(A_OSVersion, 1, 3) = "10." { ; if Windows 10
+		; temporarily removing the tray icon to hide the TrayTip
+		Menu Tray, NoIcon
+		Sleep 100
+		Menu Tray, Icon
+	}
+}
 
 MouseIsOver(WinTitle)
 {
@@ -194,7 +250,7 @@ else
 }
 KeyWait, LButton, T1 ; wait for left mouse button to release with timeout set to 1 second
 MouseGetPos, xNew, yNew
-if % (xOld == xNew) && (yOld == yNew) && ErrorLevel ; if mouse did not move and long clicked
+if % (xOld == xNew) && (yOld == yNew) && ErrorLevel ; if mouse did not move
 {
 	Winset, Alwaysontop, Toggle, A ; toggle always on top
 	ToolTip, %ExStyle%, 7, -25 ; display a tooltip with current topmost status
