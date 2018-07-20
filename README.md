@@ -1,4 +1,4 @@
-Close It is a tiny Windows utility written in [AutoHotkey](https://autohotkey.com/). It helps you close windows faster and easier.  
+Close It is a Windows utility written in [AutoHotkey](https://autohotkey.com/). It helps you close windows faster and easier.  
 (Bonus: It also allows you to pin windows always on top.)
 
 ![Close It Demo: Right click + taskbar button = pointer moves to "Close window".](img/Demo_RC_Pointer.gif) 
