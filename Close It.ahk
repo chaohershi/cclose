@@ -140,7 +140,7 @@ Middle click 	+ title bar 	= close window.
 Right click 	+ title bar 	= minize window.
 Hold left click 	+ title bar 	= toggle window always on top.
 Double press 	+ Esc key  	= close active window.
-Right click 	+ taskbar button 	= pointer moves to "Close window".
+Right click 	+ taskbar button 	= move pointer to "Close window".
 )
 Return
 

@@ -9,7 +9,7 @@ Close It is a Windows utility written in [AutoHotkey](https://autohotkey.com/). 
 - Right click + title bar = minize window.
 - Hold left click + title bar = toggle window always on top.
 - Double press + Esc key = close active window.
-- Right click + taskbar button = pointer moves to "Close window".
+- Right click + taskbar button = move pointer to "Close window".
 
 ## Download ##
 You can download the installer `Close It Setup.exe` [here](https://github.com/chaohershi/Close-It/releases).
