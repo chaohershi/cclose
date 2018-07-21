@@ -1,8 +1,10 @@
 #NoEnv
 #SingleInstance ignore ; allow only one instance of this script to be running
-
 SetWorkingDir %A_ScriptDir%
+
 ScriptName := "Close It"
+ScriptVersion := "1.3.4.0"
+CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
 
 ; add tray menu
 Menu, Tray, Icon, , , 1 ; freeze the icon
@@ -148,9 +150,9 @@ AboutMsg:
 OnMessage(0x44, "WM_COMMNOTIFY") ; https://autohotkey.com/board/topic/56272-msgbox-button-label-change/?p=353457
 MsgBox, 257, About,
 (
-%ScriptName% 1.3.3.0
+%ScriptName% %ScriptVersion%
 
-Copyright (c) 2018 Chaohe Shi
+%CopyrightNotice%
 )
 IfMsgBox, OK
 {
@@ -224,11 +226,47 @@ MouseIsOverTitlebar()
 
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
-Sleep 500 ; wait for the Jump List to pop up (if clicked on apps)
-if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up
+Sleep 500 ; wait for the Jump List to pop up
+if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
 {
-	WinGetPos, , , width, height, A ; get active window (Jump List) position
-	MouseMove, (width - 128), (height - 24), 1 ; move mouse to the bottom of the Jump List (Close window)
+	WinGetPos, , , width, height ; get the size of the last found window (Jump List)
+	MouseMove, (width - 128), (height - 24), 1 ; move mouse to the bottom of the Jump List ("Close window")
+}
+else ; wait for more time
+{
+	Sleep 250
+	if WinActive("ahk_class Windows.UI.Core.CoreWindow")
+	{
+		WinGetPos, , , width, height
+		MouseMove, (width - 128), (height - 24), 1
+	}
+	else ; wait for more time
+	{
+		Sleep 250
+		if WinActive("ahk_class Windows.UI.Core.CoreWindow")
+		{
+			WinGetPos, , , width, height
+			MouseMove, (width - 128), (height - 24), 1
+		}
+		else ; wait for more time
+		{
+			Sleep 500
+			if WinActive("ahk_class Windows.UI.Core.CoreWindow")
+			{
+				WinGetPos, , , width, height
+				MouseMove, (width - 128), (height - 24), 1
+			}
+			else ; wait for more time
+			{
+				Sleep 500
+				if WinActive("ahk_class Windows.UI.Core.CoreWindow")
+				{
+					WinGetPos, , , width, height
+					MouseMove, (width - 128), (height - 24), 1
+				}
+			}
+		}
+	}
 }
 Return
 
