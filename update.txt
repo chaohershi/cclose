@@ -1,2 +1,2 @@
-1.3.3.0
-https://github.com/chaohershi/Close-It/releases/download/v1.3.3.0/Close.It.Setup.exe
+1.3.4.0
+https://github.com/chaohershi/Close-It/releases/download/v1.3.4.0/Close.It.Setup.exe
