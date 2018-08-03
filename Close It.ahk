@@ -7,16 +7,17 @@ ScriptVersion := "1.3.4.0"
 CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
 
 ; add tray menu
-Menu, Tray, Icon, , , 1 ; freeze the icon
 Menu, Tray, NoStandard ; remove the standard menu items
-Menu, Tray, Add, Autostart, AutostartProgram
 Menu, Tray, Add, Suspend, SuspendProgram
+Menu, Tray, Default, Suspend ; set the default menu item
+Menu, Tray, Add
+Menu, Tray, Add, Autostart, AutostartProgram
 Menu, Tray, Add
 Menu, Tray, Add, Help, HelpMsg
 Menu, Tray, Add, About, AboutMsg
 Menu, Tray, Add
 Menu, Tray, Add, Exit, ExitProgram
-Menu, Tray, Tip, %ScriptName% ; changes the tray icon's tooltip
+Menu, Tray, Tip, %ScriptName% ; change the tray icon's tooltip
 
 IniDir := A_AppDataCommon . "\" . ScriptName
 IniFile := IniDir . "\" . ScriptName . ".ini"
@@ -138,11 +139,11 @@ Return
 HelpMsg:
 MsgBox, 0, Help,
 (
-Middle click 	+ title bar 	= close window.
-Right click 	+ title bar 	= minize window.
-Hold left click 	+ title bar 	= toggle window always on top.
-Double press 	+ Esc key  	= close active window.
-Right click 	+ taskbar button 	= move pointer to "Close window".
+Middle click   	+ title bar     	= close window
+Right click    	+ title bar     	= minimize window
+Hold left click	+ title bar     	= toggle window always on top
+Double press   	+ Esc key       	= close active window
+Right click    	+ taskbar button	= move pointer to "Close window"
 )
 Return
 
@@ -273,7 +274,7 @@ Return
 ; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
 #If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
 RButton::WinMinimize
-MButton::WinClose
+MButton::PostMessage, 0x112, 0xF060 ; alternative to WinClose, as WinClose is problematic when dealing with multiple Microsoft Excel instances. 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE https://autohotkey.com/docs/commands/WinClose.htm#Remarks
 ~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
@@ -306,6 +307,9 @@ if (A_TimeSincePriorHotkey < 400) and (A_PriorHotkey = "~Esc") ; if double press
 	{
 		Return ; do nothing if the active window is taskbar or desktop
 	}
-	WinClose, A ; close active window
+	else
+	{
+		PostMessage, 0x112, 0xF060, , , A ; close active window
+	}
 }
 Return
