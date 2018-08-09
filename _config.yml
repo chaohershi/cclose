@@ -3,3 +3,5 @@ description: Close windows faster and easier!
 show_downloads: true
 google_analytics: UA-105337133-2
 theme: jekyll-theme-slate
+plugins:
+  - jekyll-sitemap
