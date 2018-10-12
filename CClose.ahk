@@ -3,7 +3,7 @@
 SetWorkingDir %A_ScriptDir%
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.5.0"
+ScriptVersion := "1.3.5.1"
 CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
 
 ; add tray menu
