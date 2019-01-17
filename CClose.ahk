@@ -3,7 +3,7 @@
 SetWorkingDir %A_ScriptDir%
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.5.1"
+ScriptVersion := "1.3.6.0"
 CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
 
 ; add tray menu
@@ -216,7 +216,7 @@ MouseIsOverTitlebar()
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
 	CoordMode, Mouse, Screen
 	MouseGetPos, x, y, win
-	if WinExist("ahk_class Shell_TrayWnd ahk_id " win) || WinExist("ahk_class Chrome_WidgetWin_1 ahk_id " win) || WinExist("ahk_class MozillaWindowClass ahk_id " win) ; exclude taskbar, Chrome, and Firefox
+	if WinExist("ahk_class Shell_TrayWnd ahk_id " win) ; exclude taskbar
 	{
 		Return
 	}
