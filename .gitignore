@@ -1,15 +1,9 @@
-# configuration file for Compile AHK
-CClose.ahk.ini
-
-# configuration file for Actual Installer
-CClose.aip
-
-# compiled executable and installer package
+*.aip
+*.bat
 *.exe
-
-# batch file for code signing
-Sign File.bat
+*.ini
 
 dev/
+history/
 portable/
-x86/CClose.ahk
+x86/*.ahk
