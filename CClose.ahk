@@ -68,7 +68,7 @@ else
 
 ; retrieve the toggle autostart setting
 IniRead, IsToggleAutostart, %IniFile%, Setting, ToggleAutostart, false
-IsToggleAutostart := %IsToggleAutostart% ; ensure the keyword true/false is saved, instead of the string "true/false"
+IsToggleAutostart := %IsToggleAutostart% ; store the keyword true/false, instead of the string "true/false"
 
 ; update the autostart status
 if A_IsAdmin ; if run as administrator
@@ -238,46 +238,15 @@ MouseIsOverTitlebar()
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
 Sleep 500 ; wait for the Jump List to pop up
-if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
+Loop 6
 {
-	WinGetPos, , , width, height ; get the size of the last found window (Jump List)
-	MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move mouse to the bottom of the Jump List ("Close window")
-}
-else ; wait for more time
-{
-	Sleep 250
-	if WinActive("ahk_class Windows.UI.Core.CoreWindow")
+	if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
 	{
-		WinGetPos, , , width, height
-		MouseMove, (width / 2), (height - 3 * width / 32), 1
+		WinGetPos, , , width, height ; get the size of the last found window (Jump List)
+		MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move mouse to the bottom of the Jump List ("Close window")
+		break
 	}
-	else ; wait for more time
-	{
-		Sleep 250
-		if WinActive("ahk_class Windows.UI.Core.CoreWindow")
-		{
-			WinGetPos, , , width, height
-			MouseMove, (width / 2), (height - 3 * width / 32), 1
-		}
-		else ; wait for more time
-		{
-			Sleep 500
-			if WinActive("ahk_class Windows.UI.Core.CoreWindow")
-			{
-				WinGetPos, , , width, height
-				MouseMove, (width / 2), (height - 3 * width / 32), 1
-			}
-			else ; wait for more time
-			{
-				Sleep 500
-				if WinActive("ahk_class Windows.UI.Core.CoreWindow")
-				{
-					WinGetPos, , , width, height
-					MouseMove, (width / 2), (height - 3 * width / 32), 1
-				}
-			}
-		}
-	}
+	Sleep 250 ; wait for more time
 }
 Return
 
@@ -313,6 +282,7 @@ if (A_TimeSincePriorHotkey < 400) && (A_PriorHotkey = "~Esc") ; if double press 
 {
 	KeyWait, Esc ; wait for Esc to be released
 	WinGetClass, class, A
+	; NB: leave no space in the MatchList below https://autohotkey.com/docs/commands/IfIn.htm
 	if class in Shell_TrayWnd,Progman,WorkerW
 	{
 		Return ; do nothing if the active window is taskbar or desktop
