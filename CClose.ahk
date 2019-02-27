@@ -271,7 +271,7 @@ MouseGetPos, xNew, yNew
 if % (xOld == xNew) && (yOld == yNew) && ErrorLevel ; if mouse did not move
 {
 	Winset, Alwaysontop, Toggle, A ; toggle always on top
-	ToolTip, %ExStyle%, 7, -25 ; display a tooltip with current topmost status
+	ToolTip, %ExStyle%, , 0 ; display a tooltip with current topmost status
 	SetTimer, RemoveToolTip, 1000 ; remove the tooltip after 1 second
 }
 Return
