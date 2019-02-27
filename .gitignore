@@ -1,7 +1,7 @@
+*.ahk.ini
 *.aip
 *.bat
 *.exe
-*.ini
 
 dev/
 history/

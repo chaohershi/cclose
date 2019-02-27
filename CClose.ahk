@@ -3,20 +3,54 @@
 SetWorkingDir %A_ScriptDir%
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.6.0"
+ScriptVersion := "1.3.7.0"
 CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
+
+IniDir := A_AppDataCommon . "\" . ScriptName
+IniFile := IniDir . "\" . ScriptName . ".ini"
+
+LangFile := "lang.ini"
+
+; set script language
+if (A_Language = "0804") ; https://autohotkey.com/docs/misc/Languages.htm
+{
+Language := "Chinese"
+}
+else ; use English by default
+{
+Language := "English"
+}
+
+; set script text
+IniRead, TEXT_Suspend, %LangFile%, %Language%, TEXT_Suspend, Suspend
+IniRead, TEXT_Autostart, %LangFile%, %Language%, TEXT_Autostart, Autostart
+IniRead, TEXT_Help, %LangFile%, %Language%, TEXT_Help, Help
+IniRead, TEXT_About, %LangFile%, %Language%, TEXT_About, About
+IniRead, TEXT_Exit, %LangFile%, %Language%, TEXT_Exit, Exit
+IniRead, TEXT_Update, %LangFile%, %Language%, TEXT_Update, Update
+IniRead, TEXT_Close, %LangFile%, %Language%, TEXT_Close, Close
+IniRead, TEXT_Checking_For_Updates, %LangFile%, %Language%, TEXT_Checking_For_Updates, Checking for updates...
+IniRead, TEXT_Updater_Not_Found, %LangFile%, %Language%, TEXT_Updater_Not_Found, Updater not found!
+IniRead, TEXT_Always_On_Top, %LangFile%, %Language%, TEXT_Always_On_Top, Always on top
+IniRead, TEXT_Not_Always_On_Top, %LangFile%, %Language%, TEXT_Not_Always_On_Top, Not always on top
+IniRead, TEXT_HelpMsg1, %LangFile%, %Language%, TEXT_HelpMsg1, Middle click   	+ title bar     	= close window
+IniRead, TEXT_HelpMsg2, %LangFile%, %Language%, TEXT_HelpMsg2, Right click    	+ title bar     	= minimize window
+IniRead, TEXT_HelpMsg3, %LangFile%, %Language%, TEXT_HelpMsg3, Hold left click	+ title bar     	= toggle window always on top
+IniRead, TEXT_HelpMsg4, %LangFile%, %Language%, TEXT_HelpMsg4, Double press   	+ Esc key       	= close active window
+IniRead, TEXT_HelpMsg5, %LangFile%, %Language%, TEXT_HelpMsg5, Right click    	+ taskbar button	= move pointer to "Close window"
+TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`n" . TEXT_HelpMsg4 . "`n" . TEXT_HelpMsg5
 
 ; add tray menu
 Menu, Tray, NoStandard ; remove the standard menu items
-Menu, Tray, Add, Suspend, SuspendProgram
-Menu, Tray, Default, Suspend ; set the default menu item
+Menu, Tray, Add, %TEXT_Suspend%, SuspendProgram
+Menu, Tray, Default, %TEXT_Suspend% ; set the default menu item
 Menu, Tray, Add
-Menu, Tray, Add, Autostart, AutostartProgram
+Menu, Tray, Add, %TEXT_Autostart%, AutostartProgram
 Menu, Tray, Add
-Menu, Tray, Add, Help, HelpMsg
-Menu, Tray, Add, About, AboutMsg
+Menu, Tray, Add, %TEXT_Help%, HelpMsg
+Menu, Tray, Add, %TEXT_About%, AboutMsg
 Menu, Tray, Add
-Menu, Tray, Add, Exit, ExitProgram
+Menu, Tray, Add, %TEXT_Exit%, ExitProgram
 Menu, Tray, Tip, %ScriptName% ; change the tray icon's tooltip
 
 IniDir := A_AppDataCommon . "\" . ScriptName
@@ -132,24 +166,17 @@ if !A_IsAdmin
 Return
 
 SuspendProgram:
-Menu, Tray, ToggleCheck, Suspend
+Menu, Tray, ToggleCheck, %TEXT_Suspend%
 Suspend, Toggle
 Return
 
 HelpMsg:
-MsgBox, 0, Help,
-(
-Middle click   	+ title bar     	= close window
-Right click    	+ title bar     	= minimize window
-Hold left click	+ title bar     	= toggle window always on top
-Double press   	+ Esc key       	= close active window
-Right click    	+ taskbar button	= move pointer to "Close window"
-)
+MsgBox, 0, %TEXT_Help%, %TEXT_HelpMsg%
 Return
 
 AboutMsg:
 OnMessage(0x44, "WM_COMMNOTIFY") ; https://autohotkey.com/board/topic/56272-msgbox-button-label-change/?p=353457
-MsgBox, 257, About,
+MsgBox, 257, %TEXT_About%,
 (
 %ScriptName% %ScriptVersion%
 
@@ -159,7 +186,7 @@ IfMsgBox, OK
 {
 	if FileExist("Updater.exe")
 	{
-		TrayTip, %ScriptName%, Checking for updates...
+		TrayTip, %ScriptName%, %TEXT_Checking_For_Updates%
 		Run %A_ScriptDir%\Updater.exe /A
 		Sleep 1000
 		WinWait, ahk_exe Updater.exe, , 20
@@ -167,7 +194,7 @@ IfMsgBox, OK
 	}
 	else
 	{
-		MsgBox, 48, %ScriptName%, Updater not found!
+		MsgBox, 48, %ScriptName%, %TEXT_Updater_Not_Found%
 	}
 }
 Return
@@ -182,14 +209,15 @@ Return
 
 WM_COMMNOTIFY(wParam)
 {
+	global ; use assume-global mode to access global variables
 	if (wParam = 1027) ; AHK_DIALOG
 	{
 		Process, Exist
 		DetectHiddenWindows, On
-		if WinExist("About ahk_class #32770 ahk_pid " . ErrorLevel)
+		if WinExist(TEXT_About . " ahk_class #32770 ahk_pid " . ErrorLevel)
 		{
-			ControlSetText, Button1, &Update
-			ControlSetText, Button2, &Close
+			ControlSetText, Button1, &%TEXT_Update%
+			ControlSetText, Button2, &%TEXT_Close%
 		}
 	}
 }
@@ -197,7 +225,8 @@ WM_COMMNOTIFY(wParam)
 HideTrayTip()
 {
 	TrayTip ; attempt to hide TrayTip in the normal way
-	if SubStr(A_OSVersion, 1, 3) = "10." { ; if Windows 10
+	if SubStr(A_OSVersion, 1, 3) = "10." ; if Windows 10
+	{
 		; temporarily removing the tray icon to hide the TrayTip
 		Menu Tray, NoIcon
 		Sleep 100
@@ -281,11 +310,11 @@ MouseGetPos, xOld, yOld
 WinGet, ExStyle, ExStyle ; get extended window style
 if (ExStyle & 0x8) ; 0x8 is WS_EX_TOPMOST
 {
-	ExStyle = Not always on top
+	ExStyle = %TEXT_Not_Always_On_Top%
 }
 else
 {
-	ExStyle = Always on top
+	ExStyle = %TEXT_Always_On_Top%
 }
 KeyWait, LButton, T1 ; wait for left mouse button to release with timeout set to 1 second
 MouseGetPos, xNew, yNew
@@ -299,7 +328,7 @@ Return
 
 #If ; apply the following hotkey with no conditions
 ~Esc::
-if (A_TimeSincePriorHotkey < 400) and (A_PriorHotkey = "~Esc") ; if double press Esc
+if (A_TimeSincePriorHotkey < 400) && (A_PriorHotkey = "~Esc") ; if double press Esc
 {
 	KeyWait, Esc ; wait for Esc to be released
 	WinGetClass, class, A
