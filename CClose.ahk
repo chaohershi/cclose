@@ -53,89 +53,77 @@ Menu, Tray, Add
 Menu, Tray, Add, %TEXT_Exit%, ExitProgram
 Menu, Tray, Tip, %ScriptName% ; change the tray icon's tooltip
 
-IniDir := A_AppDataCommon . "\" . ScriptName
-IniFile := IniDir . "\" . ScriptName . ".ini"
-IniRead, IsAutostart, %IniFile%, setting, autostart ; retrieve autostart setting, the result can be on of the following: true/false/ERROR
-IsAutostart := %IsAutostart% ; ensure the keyword true/false is saved, instead of the string "true/false"
-
-if A_IsAdmin ; if run as administrator
+; update the Autostart menu
+RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve the autostart status
+if (RegValue = A_ScriptFullPath) ; if autostart is enabled
 {
-	if (IsAutostart = true)
-	{
-		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
-	}
-	else if (IsAutostart = false)
-	{
-		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
-	}
-	; else in case of ERROR, do nothing
-}
-
-; update Autostart menu
-RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve autostart status
-if (RegValue=A_ScriptFullPath) ; if autostart is enabled
-{
-	Menu, Tray, Check, Autostart ; check Autostart menu
+	Menu, Tray, Check, %TEXT_Autostart% ; check Autostart menu
 	IsAutostart := true
 }
 else
 {
-	Menu, Tray, Uncheck, Autostart ; uncheck Autostart menu
+	Menu, Tray, Uncheck, %TEXT_Autostart% ; uncheck Autostart menu
 	IsAutostart := false
 }
 
-; ensure IniDir exists
-if !InStr(FileExist(IniDir), "D")
-{
-	FileCreateDir, %IniDir%
-}
+; retrieve the toggle autostart setting
+IniRead, IsToggleAutostart, %IniFile%, Setting, ToggleAutostart, false
+IsToggleAutostart := %IsToggleAutostart% ; ensure the keyword true/false is saved, instead of the string "true/false"
 
-; update autostart setting
-if IsAutostart
+; update the autostart status
+if A_IsAdmin ; if run as administrator
 {
-	IniWrite, true, %IniFile%, setting, autostart
-}
-else
-{
-	IniWrite, false, %IniFile%, setting, autostart
+	if IsToggleAutostart
+	{
+		if IsAutostart
+		{
+			RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
+			Menu, Tray, Uncheck, %TEXT_Autostart% ; uncheck Autostart menu
+			IsAutostart := false
+		}
+		else
+		{
+			RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
+			Menu, Tray, Check, %TEXT_Autostart% ; check Autostart menu
+			IsAutostart := true
+		}
+		IniWrite, false, %IniFile%, Setting, ToggleAutostart
+	}
+	; else do nothing
 }
 
 Return ; end of the auto-execute section
 
 AutostartProgram:
-if A_IsAdmin ; if run the script as administrator, then update menu, setting file, and registry
+if A_IsAdmin ; if run the script as administrator, update the menu and the registry
 {
 	if IsAutostart
 	{
-		Menu, Tray, Uncheck, Autostart
-		IniWrite, false, %IniFile%, setting, autostart
+		Menu, Tray, Uncheck, %TEXT_Autostart%
 		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
 		IsAutostart := false
 	}
 	else
 	{
-		Menu, Tray, Check, Autostart
-		IniWrite, true, %IniFile%, setting, autostart
+		Menu, Tray, Check, %TEXT_Autostart%
 		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
 		IsAutostart := true
 	}
 }
-else ; else update setting file only
+else ; else update the setting file
 {
-	if IsAutostart
+	; ensure IniDir exists
+	if !InStr(FileExist(IniDir), "D")
 	{
-		IniWrite, false, %IniFile%, setting, autostart
+		FileCreateDir, %IniDir%
 	}
-	else
-	{
-		IniWrite, true, %IniFile%, setting, autostart
-	}
+	IniWrite, true, %IniFile%, Setting, ToggleAutostart
 }
 
 ; try restart and run the script as administrator
 ; https://autohotkey.com/docs/commands/Run.htm#RunAs
 full_command_line := DllCall("GetCommandLine", "str")
-if !(A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
+if !(A_IsAdmin || RegExMatch(full_command_line, " /restart(?!\S)"))
 {
 	try
 	{
@@ -151,17 +139,10 @@ if !(A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
 	}
 }
 
-; if run as administrator failed, rollback the autostart setting
+; if run as administrator failed, rollback the toggle autostart setting
 if !A_IsAdmin
 {
-	if IsAutostart
-	{
-		IniWrite, true, %IniFile%, setting, autostart
-	}
-	else
-	{
-		IniWrite, false, %IniFile%, setting, autostart
-	}
+	IniWrite, false, %IniFile%, Setting, ToggleAutostart
 }
 Return
 
