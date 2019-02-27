@@ -241,7 +241,7 @@ Sleep 500 ; wait for the Jump List to pop up
 if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
 {
 	WinGetPos, , , width, height ; get the size of the last found window (Jump List)
-	MouseMove, (width - 128), (height - 24), 1 ; move mouse to the bottom of the Jump List ("Close window")
+	MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move mouse to the bottom of the Jump List ("Close window")
 }
 else ; wait for more time
 {
@@ -249,7 +249,7 @@ else ; wait for more time
 	if WinActive("ahk_class Windows.UI.Core.CoreWindow")
 	{
 		WinGetPos, , , width, height
-		MouseMove, (width - 128), (height - 24), 1
+		MouseMove, (width / 2), (height - 3 * width / 32), 1
 	}
 	else ; wait for more time
 	{
@@ -257,7 +257,7 @@ else ; wait for more time
 		if WinActive("ahk_class Windows.UI.Core.CoreWindow")
 		{
 			WinGetPos, , , width, height
-			MouseMove, (width - 128), (height - 24), 1
+			MouseMove, (width / 2), (height - 3 * width / 32), 1
 		}
 		else ; wait for more time
 		{
@@ -265,7 +265,7 @@ else ; wait for more time
 			if WinActive("ahk_class Windows.UI.Core.CoreWindow")
 			{
 				WinGetPos, , , width, height
-				MouseMove, (width - 128), (height - 24), 1
+				MouseMove, (width / 2), (height - 3 * width / 32), 1
 			}
 			else ; wait for more time
 			{
@@ -273,7 +273,7 @@ else ; wait for more time
 				if WinActive("ahk_class Windows.UI.Core.CoreWindow")
 				{
 					WinGetPos, , , width, height
-					MouseMove, (width - 128), (height - 24), 1
+					MouseMove, (width / 2), (height - 3 * width / 32), 1
 				}
 			}
 		}
