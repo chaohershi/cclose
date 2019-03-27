@@ -259,8 +259,21 @@ Return
 
 ; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
 #If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
-RButton::WinMinimize
+RButton::
+KeyWait, RButton, U, T0.4 ; wait for the right mouse button to be released with timeout set to 0.4 second
+if (ErrorLevel == 0) ; if the right mouse button is released during the timeout period, minimize the window
+{
+	Send {Click} ; left click once to remove the remnant right click menu caused by previous clicks, n.b., do not use Send {LButton}, as it would behave inconsistently if the primary and secondary button have been swapped via the system's control panel
+	WinMinimize
+}
+else ; else perform a normal right click
+{
+	Send {Click, Right} ; n.b., do not use Send {RButton}
+}
+Return
+
 MButton::PostMessage, 0x112, 0xF060 ; alternative to WinClose, as WinClose is a somewhat forceful method, e.g., if multiple Microsoft Excel instances exist, WinClose will close them all at once. 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE https://autohotkey.com/docs/commands/WinClose.htm#Remarks
+
 ~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
