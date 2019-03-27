@@ -237,16 +237,23 @@ MouseIsOverTitlebar()
 
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
+CoordMode, Mouse, Screen
+MouseGetPos, xOld, yOld
 Sleep 500 ; wait for the Jump List to pop up, n.b., this line also helps to provide a uniform waiting experience
-Loop 6
+MouseGetPos, xNew, yNew
+CoordMode, Mouse, Window
+if (Abs(xNew - xOld) < 8 && Abs(yNew - yOld) < 8) ; if mouse did not move much
 {
-	if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
+	Loop 6
 	{
-		WinGetPos, , , width, height ; get the size of the last found window (Jump List)
-		MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move mouse to the bottom of the Jump List ("Close window")
-		break
+		if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
+		{
+			WinGetPos, , , width, height ; get the size of the last found window (Jump List)
+			MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move mouse to the bottom of the Jump List ("Close window")
+			break
+		}
+		Sleep 250 ; wait for more time
 	}
-	Sleep 250 ; wait for more time
 }
 Return
 
