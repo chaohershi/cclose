@@ -278,18 +278,16 @@ Return
 
 #If ; apply the following hotkey with no conditions
 ~Esc::
-if (A_TimeSincePriorHotkey < 400) && (A_PriorHotkey = "~Esc") ; if double press Esc
+WinGet, idOld, ID, A ; get the window id
+KeyWait, Esc, U ; wait for the Esc key to be released
+KeyWait, Esc, D, T0.4 ; wait for the Esc key to be pressed again
+if (ErrorLevel == 0)
 {
-	KeyWait, Esc ; wait for Esc to be released
+	WinGet, idNew, ID, A ; get the window id after the Esc key has being pressed again
 	WinGetClass, class, A
-	; n.b., leave no space in the MatchList below https://autohotkey.com/docs/commands/IfIn.htm
-	if class in Shell_TrayWnd,Progman,WorkerW
+	if (idOld == idNew && class != "Shell_TrayWnd" && class != "Progman" && class != "WorkerW") ; if current window is the same one as before and is not taskbar or desktop
 	{
-		Return ; do nothing if the active window is taskbar or desktop
-	}
-	else
-	{
-		PostMessage, 0x112, 0xF060, , , A ; close active window
+		Send !{F4}
 	}
 }
 Return
