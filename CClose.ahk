@@ -12,7 +12,7 @@ IniFile := IniDir . "\" . ScriptName . ".ini"
 LangFile := "lang.ini"
 
 ; set script language
-if (A_Language = "0804") ; https://autohotkey.com/docs/misc/Languages.htm
+if (A_Language == "0804") ; https://autohotkey.com/docs/misc/Languages.htm
 {
 Language := "Chinese"
 }
@@ -21,7 +21,7 @@ else ; use English by default
 Language := "English"
 }
 
-; set script text
+; set script texts
 IniRead, TEXT_Suspend, %LangFile%, %Language%, TEXT_Suspend, Suspend
 IniRead, TEXT_Autostart, %LangFile%, %Language%, TEXT_Autostart, Autostart
 IniRead, TEXT_Help, %LangFile%, %Language%, TEXT_Help, Help
@@ -55,7 +55,7 @@ Menu, Tray, Tip, %ScriptName% ; change the tray icon's tooltip
 
 ; update the Autostart menu
 RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve the autostart status
-if (RegValue = A_ScriptFullPath) ; if autostart is enabled
+if (RegValue == A_ScriptFullPath) ; if autostart is enabled
 {
 	Menu, Tray, Check, %TEXT_Autostart% ; check Autostart menu
 	IsAutostart := true
@@ -191,7 +191,7 @@ Return
 WM_COMMNOTIFY(wParam)
 {
 	global ; use assume-global mode to access global variables
-	if (wParam = 1027) ; AHK_DIALOG
+	if (wParam == 1027) ; AHK_DIALOG
 	{
 		Process, Exist
 		DetectHiddenWindows, On
@@ -206,7 +206,7 @@ WM_COMMNOTIFY(wParam)
 HideTrayTip()
 {
 	TrayTip ; attempt to hide TrayTip in the normal way
-	if SubStr(A_OSVersion, 1, 3) = "10." ; if Windows 10
+	if (SubStr(A_OSVersion, 1, 3) == "10.") ; if Windows 10
 	{
 		; temporarily removing the tray icon to hide the TrayTip
 		Menu Tray, NoIcon
@@ -232,12 +232,12 @@ MouseIsOverTitlebar()
 	}
 	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
 	WinExist("ahk_id " win) ; set Last Found Window for convenience
-	Return, ErrorLevel = HTCAPTION
+	Return, ErrorLevel == HTCAPTION
 }
 
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
-Sleep 500 ; wait for the Jump List to pop up
+Sleep 500 ; wait for the Jump List to pop up, n.b., this line also helps to provide a uniform waiting experience
 Loop 6
 {
 	if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
@@ -253,22 +253,22 @@ Return
 ; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
 #If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
 RButton::WinMinimize
-MButton::PostMessage, 0x112, 0xF060 ; alternative to WinClose, as WinClose is problematic when dealing with multiple Microsoft Excel instances. 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE https://autohotkey.com/docs/commands/WinClose.htm#Remarks
+MButton::PostMessage, 0x112, 0xF060 ; alternative to WinClose, as WinClose is a somewhat forceful method, e.g., if multiple Microsoft Excel instances exist, WinClose will close them all at once. 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE https://autohotkey.com/docs/commands/WinClose.htm#Remarks
 ~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
 WinGet, ExStyle, ExStyle ; get extended window style
 if (ExStyle & 0x8) ; 0x8 is WS_EX_TOPMOST
 {
-	ExStyle = %TEXT_Not_Always_On_Top%
+	ExStyle := TEXT_Not_Always_On_Top
 }
 else
 {
-	ExStyle = %TEXT_Always_On_Top%
+	ExStyle := TEXT_Always_On_Top
 }
-KeyWait, LButton, T1 ; wait for left mouse button to release with timeout set to 1 second
+KeyWait, LButton, T1 ; wait for the left mouse button to be released with timeout set to 1 second
 MouseGetPos, xNew, yNew
-if % (xOld == xNew) && (yOld == yNew) && ErrorLevel ; if mouse did not move
+if (xOld == xNew && yOld == yNew && ErrorLevel == 1) ; if mouse did not move during the timeout period
 {
 	Winset, Alwaysontop, Toggle, A ; toggle always on top
 	ToolTip, %ExStyle%, , 0 ; display a tooltip with current topmost status
@@ -282,7 +282,7 @@ if (A_TimeSincePriorHotkey < 400) && (A_PriorHotkey = "~Esc") ; if double press 
 {
 	KeyWait, Esc ; wait for Esc to be released
 	WinGetClass, class, A
-	; NB: leave no space in the MatchList below https://autohotkey.com/docs/commands/IfIn.htm
+	; n.b., leave no space in the MatchList below https://autohotkey.com/docs/commands/IfIn.htm
 	if class in Shell_TrayWnd,Progman,WorkerW
 	{
 		Return ; do nothing if the active window is taskbar or desktop
