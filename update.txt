@@ -1,2 +1,2 @@
-1.3.7.0
-https://github.com/chaohershi/cclose/releases/download/v1.3.7.0/CClose.Setup.exe
+1.3.8.0
+https://github.com/chaohershi/cclose/releases/download/v1.3.8.0/CClose.Setup.exe

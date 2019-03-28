@@ -3,7 +3,7 @@
 SetWorkingDir %A_ScriptDir%
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.7.0"
+ScriptVersion := "1.3.8.0"
 CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
