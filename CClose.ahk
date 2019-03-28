@@ -6,8 +6,8 @@ ScriptName := "CClose"
 ScriptVersion := "1.3.7.0"
 CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
 
-IniDir := A_AppDataCommon . "\" . ScriptName
-IniFile := IniDir . "\" . ScriptName . ".ini"
+ConfigDir := A_AppData . "\" . ScriptName
+ConfigFile := ConfigDir . "\" . ScriptName . ".ini"
 
 LangFile := "lang.ini"
 
@@ -24,6 +24,7 @@ Language := "English"
 ; set script texts
 IniRead, TEXT_Suspend, %LangFile%, %Language%, TEXT_Suspend, Suspend
 IniRead, TEXT_Autostart, %LangFile%, %Language%, TEXT_Autostart, Autostart
+IniRead, TEXT_Settings, %LangFile%, %Language%, TEXT_Settings, Settings
 IniRead, TEXT_Help, %LangFile%, %Language%, TEXT_Help, Help
 IniRead, TEXT_About, %LangFile%, %Language%, TEXT_About, About
 IniRead, TEXT_Exit, %LangFile%, %Language%, TEXT_Exit, Exit
@@ -47,11 +48,45 @@ Menu, Tray, Default, %TEXT_Suspend% ; set the default menu item
 Menu, Tray, Add
 Menu, Tray, Add, %TEXT_Autostart%, AutostartProgram
 Menu, Tray, Add
-Menu, Tray, Add, %TEXT_Help%, HelpMsg
-Menu, Tray, Add, %TEXT_About%, AboutMsg
+Menu, Tray, Add, %TEXT_Settings%, ConfigSettings
+Menu, Tray, Add, %TEXT_Help%, ShowHelpMsg
+Menu, Tray, Add, %TEXT_About%, ShowAboutMsg
 Menu, Tray, Add
 Menu, Tray, Add, %TEXT_Exit%, ExitProgram
 Menu, Tray, Tip, %ScriptName% ; change the tray icon's tooltip
+
+; retrieve general settings
+IniRead, EnableTitleBarMiddleClick, %ConfigFile%, General, EnableTitleBarMiddleClick, 1
+IniRead, EnableTitleBarRightClick, %ConfigFile%, General, EnableTitleBarRightClick, 1
+IniRead, EnableTitleBarHoldLeftClick, %ConfigFile%, General, EnableTitleBarHoldLeftClick, 1
+IniRead, EnableEscKeyDoublePress, %ConfigFile%, General, EnableEscKeyDoublePress, 1
+IniRead, EnableTaskbarButtonRightClick, %ConfigFile%, General, EnableTaskbarButtonRightClick, 1
+
+; apply general settings
+if (!EnableTitleBarMiddleClick)
+{
+	Hotkey, If, MouseIsOverTitlebar()
+	Hotkey, MButton, Off
+}
+if (!EnableTitleBarRightClick)
+{
+	Hotkey, If, MouseIsOverTitlebar()
+	Hotkey, RButton, Off
+}
+if (!EnableTitleBarHoldLeftClick)
+{
+	Hotkey, If, MouseIsOverTitlebar()
+	Hotkey, ~LButton, Off
+}
+if (!EnableEscKeyDoublePress)
+{
+	Hotkey, ~Esc, Off
+}
+if (!EnableTaskbarButtonRightClick)
+{
+	Hotkey, If, MouseIsOver("ahk_class Shell_TrayWnd")
+	Hotkey, ~RButton, Off
+}
 
 ; update the Autostart menu
 RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve the autostart status
@@ -67,10 +102,9 @@ else
 }
 
 ; retrieve the toggle autostart setting
-IniRead, IsToggleAutostart, %IniFile%, Setting, ToggleAutostart, false
-IsToggleAutostart := %IsToggleAutostart% ; store the keyword true/false, instead of the string "true/false"
+IniRead, IsToggleAutostart, %ConfigFile%, Autostart, ToggleAutostart, 0
 
-; update the autostart status
+; apply the toggle autostart setting
 if A_IsAdmin ; if run as administrator
 {
 	if IsToggleAutostart
@@ -87,7 +121,7 @@ if A_IsAdmin ; if run as administrator
 			Menu, Tray, Check, %TEXT_Autostart% ; check Autostart menu
 			IsAutostart := true
 		}
-		IniWrite, false, %IniFile%, Setting, ToggleAutostart
+		IniWrite, 0, %ConfigFile%, Autostart, ToggleAutostart
 	}
 	; else do nothing
 }
@@ -112,12 +146,12 @@ if A_IsAdmin ; if run the script as administrator, update the menu and the regis
 }
 else ; else update the setting file
 {
-	; ensure IniDir exists
-	if !InStr(FileExist(IniDir), "D")
+	; ensure ConfigDir exists
+	if !InStr(FileExist(ConfigDir), "D")
 	{
-		FileCreateDir, %IniDir%
+		FileCreateDir, %ConfigDir%
 	}
-	IniWrite, true, %IniFile%, Setting, ToggleAutostart
+	IniWrite, 1, %ConfigFile%, Autostart, ToggleAutostart
 }
 
 ; try restart and run the script as administrator
@@ -142,7 +176,7 @@ if !(A_IsAdmin || RegExMatch(full_command_line, " /restart(?!\S)"))
 ; if run as administrator failed, rollback the toggle autostart setting
 if !A_IsAdmin
 {
-	IniWrite, false, %IniFile%, Setting, ToggleAutostart
+	IniWrite, 0, %ConfigFile%, Autostart, ToggleAutostart
 }
 Return
 
@@ -151,11 +185,26 @@ Menu, Tray, ToggleCheck, %TEXT_Suspend%
 Suspend, Toggle
 Return
 
-HelpMsg:
+ConfigSettings:
+; ensure ConfigDir exists
+if !InStr(FileExist(ConfigDir), "D")
+{
+	FileCreateDir, %ConfigDir%
+}
+; ensure keys exist
+IniWrite, %EnableTitleBarMiddleClick%, %ConfigFile%, General, EnableTitleBarMiddleClick
+IniWrite, %EnableTitleBarRightClick%, %ConfigFile%, General, EnableTitleBarRightClick
+IniWrite, %EnableTitleBarHoldLeftClick%, %ConfigFile%, General, EnableTitleBarHoldLeftClick
+IniWrite, %EnableEscKeyDoublePress%, %ConfigFile%, General, EnableEscKeyDoublePress
+IniWrite, %EnableTaskbarButtonRightClick%, %ConfigFile%, General, EnableTaskbarButtonRightClick
+Run, %ConfigFile%
+Return
+
+ShowHelpMsg:
 MsgBox, 0, %TEXT_Help%, %TEXT_HelpMsg%
 Return
 
-AboutMsg:
+ShowAboutMsg:
 OnMessage(0x44, "WM_COMMNOTIFY") ; https://autohotkey.com/board/topic/56272-msgbox-button-label-change/?p=353457
 MsgBox, 257, %TEXT_About%,
 (
@@ -169,7 +218,7 @@ IfMsgBox, OK
 	{
 		TrayTip, %ScriptName%, %TEXT_Checking_For_Updates%
 		Run %A_ScriptDir%\Updater.exe /A
-		Sleep 1000
+		Sleep, 1000
 		WinWait, ahk_exe Updater.exe, , 20
 		HideTrayTip() ; https://autohotkey.com/docs/commands/TrayTip.htm#Remarks
 	}
@@ -209,9 +258,9 @@ HideTrayTip()
 	if (SubStr(A_OSVersion, 1, 3) == "10.") ; if Windows 10
 	{
 		; temporarily removing the tray icon to hide the TrayTip
-		Menu Tray, NoIcon
-		Sleep 100
-		Menu Tray, Icon
+		Menu, Tray, NoIcon
+		Sleep, 100
+		Menu, Tray, Icon
 	}
 }
 
@@ -226,20 +275,20 @@ MouseIsOverTitlebar()
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
 	CoordMode, Mouse, Screen
 	MouseGetPos, x, y, win
-	if WinExist("ahk_class Shell_TrayWnd ahk_id " win) ; exclude taskbar
+	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) ; exclude taskbar
 	{
 		Return
 	}
 	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
-	WinExist("ahk_id " win) ; set Last Found Window for convenience
-	Return, ErrorLevel == HTCAPTION
+	WinExist("ahk_id " . win) ; set Last Found Window for convenience
+	Return, (ErrorLevel == HTCAPTION)
 }
 
 #If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
-Sleep 500 ; wait for the Jump List to pop up, n.b., this line also helps to provide a uniform waiting experience
+Sleep, 500 ; wait for the Jump List to pop up, n.b., this line also helps to provide a uniform waiting experience
 MouseGetPos, xNew, yNew
 CoordMode, Mouse, Window
 if (Abs(xNew - xOld) < 8 && Abs(yNew - yOld) < 8) ; if mouse did not move much
@@ -252,27 +301,27 @@ if (Abs(xNew - xOld) < 8 && Abs(yNew - yOld) < 8) ; if mouse did not move much
 			MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move mouse to the bottom of the Jump List ("Close window")
 			break
 		}
-		Sleep 250 ; wait for more time
+		Sleep, 250 ; wait for more time
 	}
 }
 Return
 
 ; https://autohotkey.com/board/topic/82066-minimize-by-right-click-titlebar-close-by-middle-click/#entry521659
 #If MouseIsOverTitlebar() ; apply the following hotkey only when the mouse is over title bars
+MButton::PostMessage, 0x112, 0xF060 ; alternative to WinClose, as WinClose is a somewhat forceful method, e.g., if multiple Microsoft Excel instances exist, WinClose will close them all at once. 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE https://autohotkey.com/docs/commands/WinClose.htm#Remarks
+
 RButton::
 KeyWait, RButton, U, T0.4 ; wait for the right mouse button to be released with timeout set to 0.4 second
 if (ErrorLevel == 0) ; if the right mouse button is released during the timeout period, minimize the window
 {
 	Send {Click} ; left click once to remove the remnant right click menu caused by previous clicks, n.b., do not use Send {LButton}, as it would behave inconsistently if the primary and secondary button have been swapped via the system's control panel
-	WinMinimize
+	PostMessage, 0x112, 0xF020 ; alternative to WinMinimize
 }
 else ; else perform a normal right click
 {
 	Send {Click, Right} ; n.b., do not use Send {RButton}
 }
 Return
-
-MButton::PostMessage, 0x112, 0xF060 ; alternative to WinClose, as WinClose is a somewhat forceful method, e.g., if multiple Microsoft Excel instances exist, WinClose will close them all at once. 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE https://autohotkey.com/docs/commands/WinClose.htm#Remarks
 
 ~LButton::
 CoordMode, Mouse, Screen
