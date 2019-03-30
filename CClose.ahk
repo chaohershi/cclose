@@ -80,6 +80,7 @@ if (!EnableTitleBarHoldLeftClick)
 }
 if (!EnableEscKeyDoublePress)
 {
+	Hotkey, If
 	Hotkey, ~Esc, Off
 }
 if (!EnableTaskbarButtonRightClick)
