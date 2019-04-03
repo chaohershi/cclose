@@ -202,30 +202,45 @@ Run, %ConfigFile%
 Return
 
 ShowHelpMsg:
-MsgBox, 0, %TEXT_Help%, %TEXT_HelpMsg%
+Process, Exist
+DetectHiddenWindows, On
+if WinExist(TEXT_Help . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if message already exists
+{
+	WinShow
+	WinActivate ; active window
+}
+else ; else display message
+{
+	MsgBox, 0, %TEXT_Help%, %TEXT_HelpMsg%
+}
 Return
 
 ShowAboutMsg:
-OnMessage(0x44, "WM_COMMNOTIFY") ; https://autohotkey.com/board/topic/56272-msgbox-button-label-change/?p=353457
-MsgBox, 257, %TEXT_About%,
-(
-%ScriptName% %ScriptVersion%
-
-%CopyrightNotice%
-)
-IfMsgBox, OK
+Process, Exist
+DetectHiddenWindows, On
+if WinExist(TEXT_About . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if message already exists
 {
-	if FileExist("Updater.exe")
+	WinShow
+	WinActivate ; active window
+}
+else ; else display message
+{
+	OnMessage(0x44, "WM_COMMNOTIFY") ; https://autohotkey.com/board/topic/56272-msgbox-button-label-change/?p=353457
+	MsgBox, 257, %TEXT_About%, %TEXT_AboutMsg%
+	IfMsgBox, OK
 	{
-		TrayTip, %ScriptName%, %TEXT_Checking_For_Updates%
-		Run %A_ScriptDir%\Updater.exe /A
-		Sleep, 1000
-		WinWait, ahk_exe Updater.exe, , 20
-		HideTrayTip() ; https://autohotkey.com/docs/commands/TrayTip.htm#Remarks
-	}
-	else
-	{
-		MsgBox, 48, %ScriptName%, %TEXT_Updater_Not_Found%
+		if FileExist("Updater.exe")
+		{
+			TrayTip, %ScriptName%, %TEXT_Checking_For_Updates%
+			Run %A_ScriptDir%\Updater.exe /A
+			Sleep, 1000
+			WinWait, ahk_exe Updater.exe, , 20
+			HideTrayTip() ; https://autohotkey.com/docs/commands/TrayTip.htm#Remarks
+		}
+		else
+		{
+			MsgBox, 48, %ScriptName%, %TEXT_Updater_Not_Found%
+		}
 	}
 }
 Return
@@ -312,11 +327,12 @@ Return
 MButton::PostMessage, 0x112, 0xF060 ; alternative to WinClose, as WinClose is a somewhat forceful method, e.g., if multiple Microsoft Excel instances exist, WinClose will close them all at once. 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE https://autohotkey.com/docs/commands/WinClose.htm#Remarks
 
 RButton::
-KeyWait, RButton, U, T0.4 ; wait for the right mouse button to be released with timeout set to 0.4 second
+KeyWait, RButton, T0.4 ; wait for the right mouse button to be released with timeout set to 0.4 second
 if (ErrorLevel == 0) ; if the right mouse button is released during the timeout period, minimize the window
 {
+	; alternative to WinMinimize
 	Send {Click} ; left click once to remove the remnant right click menu caused by previous clicks, n.b., do not use Send {LButton}, as it would behave inconsistently if the primary and secondary button have been swapped via the system's control panel
-	PostMessage, 0x112, 0xF020 ; alternative to WinMinimize
+	PostMessage, 0x112, 0xF020
 }
 else ; else perform a normal right click
 {
@@ -349,7 +365,7 @@ Return
 #If ; apply the following hotkey with no conditions
 ~Esc::
 WinGet, idOld, ID, A ; get the window id
-KeyWait, Esc, U ; wait for the Esc key to be released
+KeyWait, Esc ; wait for the Esc key to be released
 KeyWait, Esc, D, T0.4 ; wait for the Esc key to be pressed again
 if (ErrorLevel == 0)
 {
