@@ -3,8 +3,8 @@
 SetWorkingDir %A_ScriptDir%
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.8.0"
-CopyrightNotice := "Copyright (c) 2018 Chaohe Shi"
+ScriptVersion := "1.3.10.0"
+CopyrightNotice := "Copyright (c) 2018-2019 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
 ConfigFile := ConfigDir . "\" . ScriptName . ".ini"
