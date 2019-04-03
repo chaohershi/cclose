@@ -23,7 +23,6 @@ Language := "English"
 
 ; set the script texts
 IniRead, TEXT_Suspend, %LangFile%, %Language%, TEXT_Suspend, Suspend
-IniRead, TEXT_Autostart, %LangFile%, %Language%, TEXT_Autostart, Autostart
 IniRead, TEXT_Settings, %LangFile%, %Language%, TEXT_Settings, Settings
 IniRead, TEXT_Help, %LangFile%, %Language%, TEXT_Help, Help
 IniRead, TEXT_About, %LangFile%, %Language%, TEXT_About, About
