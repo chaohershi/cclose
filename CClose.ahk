@@ -11,7 +11,7 @@ ConfigFile := ConfigDir . "\" . ScriptName . ".ini"
 
 LangFile := "lang.ini"
 
-; set script language
+; set the script language
 if (A_Language == "0804") ; https://autohotkey.com/docs/misc/Languages.htm
 {
 Language := "Chinese"
@@ -21,7 +21,7 @@ else ; use English by default
 Language := "English"
 }
 
-; set script texts
+; set the script texts
 IniRead, TEXT_Suspend, %LangFile%, %Language%, TEXT_Suspend, Suspend
 IniRead, TEXT_Autostart, %LangFile%, %Language%, TEXT_Autostart, Autostart
 IniRead, TEXT_Settings, %LangFile%, %Language%, TEXT_Settings, Settings
@@ -48,7 +48,7 @@ IniRead, TEXT_HelpMsg5, %LangFile%, %Language%, TEXT_HelpMsg5, Right click    	+
 TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`n" . TEXT_HelpMsg4 . "`n" . TEXT_HelpMsg5
 TEXT_AboutMsg := ScriptName . " " . ScriptVersion . "`n`n" . CopyrightNotice
 
-; add tray menu
+; add the tray menu
 Menu, Tray, NoStandard ; remove the standard menu items
 Menu, Tray, Add, %TEXT_Suspend%, SuspendProgram
 Menu, Tray, Default, %TEXT_Suspend% ; set the default menu item
@@ -96,14 +96,14 @@ Hotkey5 := {KeyName: "~RButton"
 		  , MenuItemName: TEXT_MenuTaskbarButtonRightClick}
 Hotkeys := [Hotkey1, Hotkey2, Hotkey3, Hotkey4, Hotkey5]
 
-; retrieve general settings
+; retrieve the general settings
 for index, element in Hotkeys
 {
 	IniRead, KeySettingValue, %ConfigFile%, General, % element.KeySettingName, 1
 	element.KeySettingValue := KeySettingValue
 }
 
-; apply general settings
+; apply the general settings
 for index, element in Hotkeys
 {
 	if (!element.KeySettingValue)
@@ -117,56 +117,53 @@ for index, element in Hotkeys
 	}
 }
 
-; update the Autostart menu
-RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve the autostart status
-if (RegValue == A_ScriptFullPath) ; if autostart is enabled
-{
-	Menu, SettingMenu, Check, %TEXT_MenuAutostart% ; check Autostart menu
-	IsAutostart := true
-}
-else
-{
-	Menu, SettingMenu, Uncheck, %TEXT_MenuAutostart% ; uncheck Autostart menu
-	IsAutostart := false
-}
+; retrieve the autostart setting
+IniRead, IsAutostart, %ConfigFile%, Autostart, EnableAutostart, 1
 
-; retrieve the toggle autostart setting
-IniRead, IsToggleAutostart, %ConfigFile%, Autostart, ToggleAutostart, 0
-
-; apply the toggle autostart setting
-if A_IsAdmin ; if run as administrator
+; apply the autostart setting if possible
+if A_IsAdmin ; if run the script as administrator, apply the autostart setting
 {
-	if IsToggleAutostart
+	if IsAutostart
 	{
-		if IsAutostart
-		{
-			RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
-			Menu, SettingMenu, Uncheck, %TEXT_MenuAutostart% ; uncheck Autostart menu
-			IsAutostart := false
-		}
-		else
-		{
-			RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
-			Menu, SettingMenu, Check, %TEXT_MenuAutostart% ; check Autostart menu
-			IsAutostart := true
-		}
-		IniWrite, 0, %ConfigFile%, Autostart, ToggleAutostart
+		Menu, SettingMenu, Check, %TEXT_MenuAutostart% ; check the autostart menu item
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
 	}
-	; else do nothing
+	else
+	{
+		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
+	}
+}
+else ; else update the autostart setting
+{
+	RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve autostart status
+	if (RegValue == A_ScriptFullPath) ; if autostart is enabled
+	{
+		Menu, SettingMenu, Check, %TEXT_MenuAutostart% ; check the autostart menu item
+		IsAutostart := 1
+	}
+	else
+	{
+		IsAutostart := 0
+	}
+	Gosub, EnsureConfigDirExists
+	IniWrite, %IsAutostart%, %ConfigFile%, Autostart, EnableAutostart ; update the autostart setting
 }
 
 Return ; end of the auto-execute section
+
+; ensure ConfigDir exists
+EnsureConfigDirExists:
+if !InStr(FileExist(ConfigDir), "D")
+{
+	FileCreateDir, %ConfigDir%
+}
+Return
 
 ; config and apply the settings
 ConfigSetting(ItemName, ItemPos, MenuName)
 {
 	global ; use assume-global mode to access global variables
 	Menu, %MenuName%, ToggleCheck, %ItemName%
-	; ensure ConfigDir exists
-	if !InStr(FileExist(ConfigDir), "D")
-	{
-		FileCreateDir, %ConfigDir%
-	}
 	for index, element in Hotkeys
 	{
 		if (ItemName == element.MenuItemName)
@@ -174,35 +171,27 @@ ConfigSetting(ItemName, ItemPos, MenuName)
 			Hotkey, If, % element.KeyScope
 			Hotkey, % element.KeyName, Toggle
 			element.KeySettingValue := !element.KeySettingValue
+			Gosub, EnsureConfigDirExists
 			IniWrite, % element.KeySettingValue, %ConfigFile%, General, % element.KeySettingName
 		}
 	}
 }
 
 AutostartProgram:
-if A_IsAdmin ; if run the script as administrator, update the menu and the registry
+IsAutostart := !IsAutostart
+Gosub, EnsureConfigDirExists
+IniWrite, %IsAutostart%, %ConfigFile%, Autostart, EnableAutostart
+if A_IsAdmin ; if run the script as administrator, apply the autostart setting
 {
+	Menu, SettingMenu, ToggleCheck, %TEXT_MenuAutostart%
 	if IsAutostart
 	{
-		Menu, SettingMenu, Uncheck, %TEXT_MenuAutostart%
-		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
-		IsAutostart := false
+		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
 	}
 	else
 	{
-		Menu, SettingMenu, Check, %TEXT_MenuAutostart%
-		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
-		IsAutostart := true
+		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
 	}
-}
-else ; else update the setting file
-{
-	; ensure ConfigDir exists
-	if !InStr(FileExist(ConfigDir), "D")
-	{
-		FileCreateDir, %ConfigDir%
-	}
-	IniWrite, 1, %ConfigFile%, Autostart, ToggleAutostart
 }
 
 ; try restart and run the script as administrator
@@ -224,10 +213,12 @@ if !(A_IsAdmin || RegExMatch(full_command_line, " /restart(?!\S)"))
 	}
 }
 
-; if run as administrator failed, rollback the toggle autostart setting
+; if run as administrator failed, rollback the autostart setting
 if !A_IsAdmin
 {
-	IniWrite, 0, %ConfigFile%, Autostart, ToggleAutostart
+	IsAutostart := !IsAutostart
+	Gosub, EnsureConfigDirExists
+	IniWrite, %IsAutostart%, %ConfigFile%, Autostart, EnableAutostart
 }
 Return
 
@@ -239,12 +230,12 @@ Return
 ShowHelpMsg:
 Process, Exist
 DetectHiddenWindows, On
-if WinExist(TEXT_Help . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if message already exists
+if WinExist(TEXT_Help . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if the help message already exists
 {
-	WinShow
-	WinActivate ; active window
+	WinShow ; show the message window if it is hidden
+	WinActivate
 }
-else ; else display message
+else ; else display the help message
 {
 	MsgBox, 0, %TEXT_Help%, %TEXT_HelpMsg%
 }
@@ -253,12 +244,12 @@ Return
 ShowAboutMsg:
 Process, Exist
 DetectHiddenWindows, On
-if WinExist(TEXT_About . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if message already exists
+if WinExist(TEXT_About . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if the about message already exists
 {
-	WinShow
-	WinActivate ; active window
+	WinShow ; show the message window if it is hidden
+	WinActivate
 }
-else ; else display message
+else ; else display the about message
 {
 	OnMessage(0x44, "WM_COMMNOTIFY") ; https://autohotkey.com/board/topic/56272-msgbox-button-label-change/?p=353457
 	MsgBox, 257, %TEXT_About%, %TEXT_AboutMsg%
@@ -305,8 +296,8 @@ WM_COMMNOTIFY(wParam)
 
 HideTrayTip()
 {
-	TrayTip ; attempt to hide TrayTip in the normal way
-	if (SubStr(A_OSVersion, 1, 3) == "10.") ; if Windows 10
+	TrayTip ; attempt to hide the TrayTip in the normal way
+	if (SubStr(A_OSVersion, 1, 3) == "10.") ; if the OS version is Windows 10
 	{
 		; temporarily removing the tray icon to hide the TrayTip
 		Menu, Tray, NoIcon
@@ -326,12 +317,12 @@ MouseIsOverTitlebar()
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
 	CoordMode, Mouse, Screen
 	MouseGetPos, x, y, win
-	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) ; exclude taskbar
+	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) ; exclude the taskbar
 	{
 		Return
 	}
 	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
-	WinExist("ahk_id " . win) ; set Last Found Window for convenience
+	WinExist("ahk_id " . win) ; set the last found window for convenience
 	Return, (ErrorLevel == HTCAPTION)
 }
 
@@ -342,14 +333,14 @@ MouseGetPos, xOld, yOld
 Sleep, 500 ; wait for the Jump List to pop up, n.b., this line also helps to provide a uniform waiting experience
 MouseGetPos, xNew, yNew
 CoordMode, Mouse, Window
-if (Abs(xNew - xOld) < 8 && Abs(yNew - yOld) < 8) ; if mouse did not move much
+if (Abs(xNew - xOld) < 8 && Abs(yNew - yOld) < 8) ; if the mouse did not move much
 {
 	Loop 6
 	{
-		if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if Jump List pops up (right clicked on taskbar app buttons)
+		if WinActive("ahk_class Windows.UI.Core.CoreWindow") ; if the Jump List pops up (right clicked on the taskbar app buttons)
 		{
 			WinGetPos, , , width, height ; get the size of the last found window (Jump List)
-			MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move mouse to the bottom of the Jump List ("Close window")
+			MouseMove, (width / 2), (height - 3 * width / 32), 1 ; move the mouse to the bottom of the Jump List ("Close window")
 			break
 		}
 		Sleep, 250 ; wait for more time
@@ -369,7 +360,7 @@ if (ErrorLevel == 0) ; if the right mouse button is released during the timeout 
 	Send {Click} ; left click once to remove the remnant right click menu caused by previous clicks, n.b., do not use Send {LButton}, as it would behave inconsistently if the primary and secondary button have been swapped via the system's control panel
 	PostMessage, 0x112, 0xF020
 }
-else ; else perform a normal right click
+else ; else send a normal right click
 {
 	Send {Click, Right} ; n.b., do not use Send {RButton}
 }
@@ -378,7 +369,7 @@ Return
 ~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
-WinGet, ExStyle, ExStyle ; get extended window style
+WinGet, ExStyle, ExStyle ; get the extended window style
 if (ExStyle & 0x8) ; 0x8 is WS_EX_TOPMOST
 {
 	ExStyle := TEXT_Not_Always_On_Top
@@ -389,9 +380,9 @@ else
 }
 KeyWait, LButton, T1 ; wait for the left mouse button to be released with timeout set to 1 second
 MouseGetPos, xNew, yNew
-if (xOld == xNew && yOld == yNew && ErrorLevel == 1) ; if mouse did not move during the timeout period
+if (xOld == xNew && yOld == yNew && ErrorLevel == 1) ; if the mouse did not move during the timeout period
 {
-	Winset, Alwaysontop, Toggle, A ; toggle always on top
+	Winset, Alwaysontop, Toggle, A ; toggle window always on top
 	ToolTip, %ExStyle%, , 0 ; display a tooltip with current topmost status
 	SetTimer, RemoveToolTip, 1000 ; remove the tooltip after 1 second
 }
@@ -406,7 +397,7 @@ if (ErrorLevel == 0)
 {
 	WinGet, idNew, ID, A ; get the window id after the Esc key has being pressed again
 	WinGetClass, class, A
-	if (idOld == idNew && class != "Shell_TrayWnd" && class != "Progman" && class != "WorkerW") ; if current window is the same one as before and is not taskbar or desktop
+	if (idOld == idNew && class != "Shell_TrayWnd" && class != "Progman" && class != "WorkerW") ; if the current window is the same one as before and is not taskbar or desktop
 	{
 		Send !{F4}
 	}
