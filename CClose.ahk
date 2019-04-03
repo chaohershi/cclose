@@ -34,71 +34,99 @@ IniRead, TEXT_Checking_For_Updates, %LangFile%, %Language%, TEXT_Checking_For_Up
 IniRead, TEXT_Updater_Not_Found, %LangFile%, %Language%, TEXT_Updater_Not_Found, Updater not found!
 IniRead, TEXT_Always_On_Top, %LangFile%, %Language%, TEXT_Always_On_Top, Always on top
 IniRead, TEXT_Not_Always_On_Top, %LangFile%, %Language%, TEXT_Not_Always_On_Top, Not always on top
+IniRead, TEXT_MenuAutostart, %LangFile%, %Language%, TEXT_MenuAutostart, Run %ScriptName% on system startup
+IniRead, TEXT_MenuTitleBarMiddleClick, %LangFile%, %Language%, TEXT_MenuTitleBarMiddleClick, Middle click on title bar to close window
+IniRead, TEXT_MenuTitleBarRightClick, %LangFile%, %Language%, TEXT_MenuTitleBarRightClick, Right click on title bar to minimize window
+IniRead, TEXT_MenuTitleBarHoldLeftClick, %LangFile%, %Language%, TEXT_MenuTitleBarHoldLeftClick, Hold left click on title bar to toggle window always on top
+IniRead, TEXT_MenuEscKeyDoublePress, %LangFile%, %Language%, TEXT_MenuEscKeyDoublePress, Double press Esc key to close active window
+IniRead, TEXT_MenuTaskbarButtonRightClick, %LangFile%, %Language%, TEXT_MenuTaskbarButtonRightClick, Right click on taskbar button to move pointer to "Close window"
 IniRead, TEXT_HelpMsg1, %LangFile%, %Language%, TEXT_HelpMsg1, Middle click   	+ title bar     	= close window
 IniRead, TEXT_HelpMsg2, %LangFile%, %Language%, TEXT_HelpMsg2, Right click    	+ title bar     	= minimize window
 IniRead, TEXT_HelpMsg3, %LangFile%, %Language%, TEXT_HelpMsg3, Hold left click	+ title bar     	= toggle window always on top
 IniRead, TEXT_HelpMsg4, %LangFile%, %Language%, TEXT_HelpMsg4, Double press   	+ Esc key       	= close active window
 IniRead, TEXT_HelpMsg5, %LangFile%, %Language%, TEXT_HelpMsg5, Right click    	+ taskbar button	= move pointer to "Close window"
 TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`n" . TEXT_HelpMsg4 . "`n" . TEXT_HelpMsg5
+TEXT_AboutMsg := ScriptName . " " . ScriptVersion . "`n`n" . CopyrightNotice
 
 ; add tray menu
 Menu, Tray, NoStandard ; remove the standard menu items
 Menu, Tray, Add, %TEXT_Suspend%, SuspendProgram
 Menu, Tray, Default, %TEXT_Suspend% ; set the default menu item
 Menu, Tray, Add
-Menu, Tray, Add, %TEXT_Autostart%, AutostartProgram
+Menu, SettingMenu, Add, %TEXT_MenuAutostart%, AutostartProgram
+Menu, SettingMenu, Add
+Menu, SettingMenu, Add, %TEXT_MenuTitleBarMiddleClick%, ConfigSetting
+Menu, SettingMenu, Add, %TEXT_MenuTitleBarRightClick%, ConfigSetting
+Menu, SettingMenu, Add, %TEXT_MenuTitleBarHoldLeftClick%, ConfigSetting
+Menu, SettingMenu, Add, %TEXT_MenuEscKeyDoublePress%, ConfigSetting
+Menu, SettingMenu, Add, %TEXT_MenuTaskbarButtonRightClick%, ConfigSetting
+Menu, Tray, Add, %TEXT_Settings%, :SettingMenu
 Menu, Tray, Add
-Menu, Tray, Add, %TEXT_Settings%, ConfigSettings
 Menu, Tray, Add, %TEXT_Help%, ShowHelpMsg
 Menu, Tray, Add, %TEXT_About%, ShowAboutMsg
 Menu, Tray, Add
 Menu, Tray, Add, %TEXT_Exit%, ExitProgram
 Menu, Tray, Tip, %ScriptName% ; change the tray icon's tooltip
 
+; store hotkeys and their corresponding menu items in an associative array
+Hotkey1 := {KeyName: "MButton"
+		  , KeyScope: "MouseIsOverTitlebar()"
+		  , KeySettingName: "EnableTitleBarMiddleClick"
+		  , KeySettingValue: EnableTitleBarMiddleClick := 1
+		  , MenuItemName: TEXT_MenuTitleBarMiddleClick}
+Hotkey2 := {KeyName: "RButton"
+		  , KeyScope: "MouseIsOverTitlebar()"
+		  , KeySettingName: "EnableTitleBarRightClick"
+		  , KeySettingValue: EnableTitleBarRightClick := 1
+		  , MenuItemName: TEXT_MenuTitleBarRightClick}
+Hotkey3 := {KeyName: "~LButton"
+		  , KeyScope: "MouseIsOverTitlebar()"
+		  , KeySettingName: "EnableTitleBarHoldLeftClick"
+		  , KeySettingValue: EnableTitleBarHoldLeftClick := 1
+		  , MenuItemName: TEXT_MenuTitleBarHoldLeftClick}
+Hotkey4 := {KeyName: "~Esc"
+		  , KeyScope: "true"
+		  , KeySettingName: "EnableEscKeyDoublePress"
+		  , KeySettingValue: EnableEscKeyDoublePress := 1
+		  , MenuItemName: TEXT_MenuEscKeyDoublePress}
+Hotkey5 := {KeyName: "~RButton"
+		  , KeyScope: "MouseIsOver(""ahk_class Shell_TrayWnd"")"
+		  , KeySettingName: "EnableTaskbarButtonRightClick"
+		  , KeySettingValue: EnableTaskbarButtonRightClick := 1
+		  , MenuItemName: TEXT_MenuTaskbarButtonRightClick}
+Hotkeys := [Hotkey1, Hotkey2, Hotkey3, Hotkey4, Hotkey5]
+
 ; retrieve general settings
-IniRead, EnableTitleBarMiddleClick, %ConfigFile%, General, EnableTitleBarMiddleClick, 1
-IniRead, EnableTitleBarRightClick, %ConfigFile%, General, EnableTitleBarRightClick, 1
-IniRead, EnableTitleBarHoldLeftClick, %ConfigFile%, General, EnableTitleBarHoldLeftClick, 1
-IniRead, EnableEscKeyDoublePress, %ConfigFile%, General, EnableEscKeyDoublePress, 1
-IniRead, EnableTaskbarButtonRightClick, %ConfigFile%, General, EnableTaskbarButtonRightClick, 1
+for index, element in Hotkeys
+{
+	IniRead, KeySettingValue, %ConfigFile%, General, % element.KeySettingName, 1
+	element.KeySettingValue := KeySettingValue
+}
 
 ; apply general settings
-if (!EnableTitleBarMiddleClick)
+for index, element in Hotkeys
 {
-	Hotkey, If, MouseIsOverTitlebar()
-	Hotkey, MButton, Off
-}
-if (!EnableTitleBarRightClick)
-{
-	Hotkey, If, MouseIsOverTitlebar()
-	Hotkey, RButton, Off
-}
-if (!EnableTitleBarHoldLeftClick)
-{
-	Hotkey, If, MouseIsOverTitlebar()
-	Hotkey, ~LButton, Off
-}
-if (!EnableEscKeyDoublePress)
-{
-	Hotkey, If
-	Hotkey, ~Esc, Off
-}
-if (!EnableTaskbarButtonRightClick)
-{
-	Hotkey, If, MouseIsOver("ahk_class Shell_TrayWnd")
-	Hotkey, ~RButton, Off
+	if (!element.KeySettingValue)
+	{
+		Hotkey, If, % element.KeyScope
+		Hotkey, % element.KeyName, Off
+	}
+	else
+	{
+		Menu, SettingMenu, Check, % element.MenuItemName
+	}
 }
 
 ; update the Autostart menu
 RegRead, RegValue, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; retrieve the autostart status
 if (RegValue == A_ScriptFullPath) ; if autostart is enabled
 {
-	Menu, Tray, Check, %TEXT_Autostart% ; check Autostart menu
+	Menu, SettingMenu, Check, %TEXT_MenuAutostart% ; check Autostart menu
 	IsAutostart := true
 }
 else
 {
-	Menu, Tray, Uncheck, %TEXT_Autostart% ; uncheck Autostart menu
+	Menu, SettingMenu, Uncheck, %TEXT_MenuAutostart% ; uncheck Autostart menu
 	IsAutostart := false
 }
 
@@ -113,13 +141,13 @@ if A_IsAdmin ; if run as administrator
 		if IsAutostart
 		{
 			RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
-			Menu, Tray, Uncheck, %TEXT_Autostart% ; uncheck Autostart menu
+			Menu, SettingMenu, Uncheck, %TEXT_MenuAutostart% ; uncheck Autostart menu
 			IsAutostart := false
 		}
 		else
 		{
 			RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
-			Menu, Tray, Check, %TEXT_Autostart% ; check Autostart menu
+			Menu, SettingMenu, Check, %TEXT_MenuAutostart% ; check Autostart menu
 			IsAutostart := true
 		}
 		IniWrite, 0, %ConfigFile%, Autostart, ToggleAutostart
@@ -129,18 +157,40 @@ if A_IsAdmin ; if run as administrator
 
 Return ; end of the auto-execute section
 
+; config and apply the settings
+ConfigSetting(ItemName, ItemPos, MenuName)
+{
+	global ; use assume-global mode to access global variables
+	Menu, %MenuName%, ToggleCheck, %ItemName%
+	; ensure ConfigDir exists
+	if !InStr(FileExist(ConfigDir), "D")
+	{
+		FileCreateDir, %ConfigDir%
+	}
+	for index, element in Hotkeys
+	{
+		if (ItemName == element.MenuItemName)
+		{
+			Hotkey, If, % element.KeyScope
+			Hotkey, % element.KeyName, Toggle
+			element.KeySettingValue := !element.KeySettingValue
+			IniWrite, % element.KeySettingValue, %ConfigFile%, General, % element.KeySettingName
+		}
+	}
+}
+
 AutostartProgram:
 if A_IsAdmin ; if run the script as administrator, update the menu and the registry
 {
 	if IsAutostart
 	{
-		Menu, Tray, Uncheck, %TEXT_Autostart%
+		Menu, SettingMenu, Uncheck, %TEXT_MenuAutostart%
 		RegDelete, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName% ; disable autostart
 		IsAutostart := false
 	}
 	else
 	{
-		Menu, Tray, Check, %TEXT_Autostart%
+		Menu, SettingMenu, Check, %TEXT_MenuAutostart%
 		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run, %ScriptName%, %A_ScriptFullPath% ; enable autostart
 		IsAutostart := true
 	}
@@ -184,21 +234,6 @@ Return
 SuspendProgram:
 Menu, Tray, ToggleCheck, %TEXT_Suspend%
 Suspend, Toggle
-Return
-
-ConfigSettings:
-; ensure ConfigDir exists
-if !InStr(FileExist(ConfigDir), "D")
-{
-	FileCreateDir, %ConfigDir%
-}
-; ensure keys exist
-IniWrite, %EnableTitleBarMiddleClick%, %ConfigFile%, General, EnableTitleBarMiddleClick
-IniWrite, %EnableTitleBarRightClick%, %ConfigFile%, General, EnableTitleBarRightClick
-IniWrite, %EnableTitleBarHoldLeftClick%, %ConfigFile%, General, EnableTitleBarHoldLeftClick
-IniWrite, %EnableEscKeyDoublePress%, %ConfigFile%, General, EnableEscKeyDoublePress
-IniWrite, %EnableTaskbarButtonRightClick%, %ConfigFile%, General, EnableTaskbarButtonRightClick
-Run, %ConfigFile%
 Return
 
 ShowHelpMsg:
@@ -362,7 +397,7 @@ if (xOld == xNew && yOld == yNew && ErrorLevel == 1) ; if mouse did not move dur
 }
 Return
 
-#If ; apply the following hotkey with no conditions
+#If, true ; apply the following hotkey with no conditions
 ~Esc::
 WinGet, idOld, ID, A ; get the window id
 KeyWait, Esc ; wait for the Esc key to be released
