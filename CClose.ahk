@@ -1,9 +1,10 @@
-#NoEnv
+#NoEnv ; recommended for performance and compatibility with future AutoHotkey releases
 #SingleInstance ignore ; allow only one instance of this script to be running
-SetWorkingDir %A_ScriptDir%
+SendMode Input ; recommended for new scripts due to its superior speed and reliability
+SetWorkingDir %A_ScriptDir% ; ensures a consistent starting directory
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.10.0"
+ScriptVersion := "1.3.11.0"
 CopyrightNotice := "Copyright (c) 2018-2019 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
@@ -355,9 +356,8 @@ RButton::
 KeyWait, RButton, T0.4 ; wait for the right mouse button to be released with timeout set to 0.4 second
 if (ErrorLevel == 0) ; if the right mouse button is released during the timeout period, minimize the window
 {
-	; alternative to WinMinimize
 	Send {Click} ; left click once to remove the remnant right click menu caused by previous clicks, n.b., do not use Send {LButton}, as it would behave inconsistently if the primary and secondary button have been swapped via the system's control panel
-	PostMessage, 0x112, 0xF020
+	PostMessage, 0x112, 0xF020 ; alternative to WinMinimize
 }
 else ; else send a normal right click
 {
