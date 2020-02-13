@@ -40,6 +40,8 @@ If you enjoy using CClose, you can buy me a cup of coffee. :) I would really app
   </tbody>
 </table>
 
+[Donation List](https://github.com/chaohershi/cclose/wiki/Donation-List)
+
 ## License
 CClose is available under the MIT License.  
 CClose icon made by [Pavel Kozlov](https://www.flaticon.com/authors/pavel-kozlov) from [Flaticon](https://www.flaticon.com/free-icon/delete-button_70287) is licensed by [CC 3.0 BY](https://creativecommons.org/licenses/by/3.0/).
