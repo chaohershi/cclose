@@ -4,8 +4,8 @@ SendMode Input ; recommended for new scripts due to its superior speed and relia
 SetWorkingDir %A_ScriptDir% ; ensures a consistent starting directory
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.11.0"
-CopyrightNotice := "Copyright (c) 2018-2019 Chaohe Shi"
+ScriptVersion := "1.3.12.0"
+CopyrightNotice := "Copyright (c) 2018-2020 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
 ConfigFile := ConfigDir . "\" . ScriptName . ".ini"
@@ -90,7 +90,7 @@ Hotkey4 := {KeyName: "~Esc"
 		  , KeySettingValue: EnableEscKeyDoublePress := 1
 		  , MenuItemName: TEXT_MenuEscKeyDoublePress}
 Hotkey5 := {KeyName: "~RButton"
-		  , KeyScope: "MouseIsOver(""ahk_class Shell_TrayWnd"")"
+		  , KeyScope: "MouseIsOver(""ahk_class Shell_TrayWnd"") || MouseIsOver(""ahk_class Shell_SecondaryTrayWnd"")"
 		  , KeySettingName: "EnableTaskbarButtonRightClick"
 		  , KeySettingValue: EnableTaskbarButtonRightClick := 1
 		  , MenuItemName: TEXT_MenuTaskbarButtonRightClick}
@@ -317,7 +317,7 @@ MouseIsOverTitlebar()
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
 	CoordMode, Mouse, Screen
 	MouseGetPos, x, y, win
-	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) ; exclude the taskbar
+	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) || WinExist("ahk_class Shell_SecondaryTrayWnd ahk_id " . win) ; exclude the taskbar
 	{
 		Return
 	}
@@ -326,7 +326,7 @@ MouseIsOverTitlebar()
 	Return, (ErrorLevel == HTCAPTION)
 }
 
-#If MouseIsOver("ahk_class Shell_TrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
+#If MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
 ~RButton:: ; when right clicked
 CoordMode, Mouse, Screen
 MouseGetPos, xOld, yOld
@@ -396,7 +396,7 @@ if (ErrorLevel == 0)
 {
 	WinGet, idNew, ID, A ; get the window id after the Esc key has being pressed again
 	WinGetClass, class, A
-	if (idOld == idNew && class != "Shell_TrayWnd" && class != "Progman" && class != "WorkerW") ; if the current window is the same one as before and is not taskbar or desktop
+	if (idOld == idNew && class != "Shell_TrayWnd" && class != "Shell_SecondaryTrayWnd" && class != "Progman" && class != "WorkerW") ; if the current window is the same one as before and is not taskbar or desktop
 	{
 		Send !{F4}
 	}
