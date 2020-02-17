@@ -319,7 +319,7 @@ MouseIsOverTitlebar()
 	MouseGetPos, x, y, win
 	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) || WinExist("ahk_class Shell_SecondaryTrayWnd ahk_id " . win) ; exclude the taskbar
 	{
-		Return
+		Return, false
 	}
 	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
 	WinExist("ahk_id " . win) ; set the last found window for convenience
@@ -356,7 +356,6 @@ RButton::
 KeyWait, RButton, T0.4 ; wait for the right mouse button to be released with timeout set to 0.4 second
 if (ErrorLevel == 0) ; if the right mouse button is released during the timeout period, minimize the window
 {
-	Send {Click} ; left click once to remove the remnant right click menu caused by previous clicks, n.b., do not use Send {LButton}, as it would behave inconsistently if the primary and secondary button have been swapped via the system's control panel
 	PostMessage, 0x112, 0xF020 ; alternative to WinMinimize
 }
 else ; else send a normal right click
