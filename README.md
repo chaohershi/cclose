@@ -40,7 +40,7 @@ If you enjoy using CClose, you can buy me a cup of coffee. :) I would really app
   </tbody>
 </table>
 
-[Donation List](https://github.com/chaohershi/cclose/wiki/Donation-List)
+[Donation List](https://github.com/chaohershi/cclose/wiki/Donation)
 
 ## License
 CClose is available under the MIT License.  
