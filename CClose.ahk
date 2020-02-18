@@ -4,7 +4,7 @@ SendMode Input ; recommended for new scripts due to its superior speed and relia
 SetWorkingDir %A_ScriptDir% ; ensures a consistent starting directory
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.12.0"
+ScriptVersion := "1.3.13.0-beta"
 CopyrightNotice := "Copyright (c) 2018-2020 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
@@ -148,6 +148,9 @@ else ; else update the autostart setting
 	Gosub, EnsureConfigDirExists
 	IniWrite, %IsAutostart%, %ConfigFile%, Autostart, EnableAutostart ; update the autostart setting
 }
+
+; retrieve the list of apps that have no title bars or entire GUI as title bars
+IniRead, SloppyGUIPrograms, %ConfigFile%, Advanced, SloppyGUIPrograms, %A_Space%
 
 Return ; end of the auto-execute section
 
@@ -315,15 +318,33 @@ MouseIsOver(WinTitle)
 MouseIsOverTitlebar()
 {
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
+	global SloppyGUIPrograms
 	CoordMode, Mouse, Screen
 	MouseGetPos, x, y, win
+	WinGetPos, xWin, yWin, , , ahk_id %win%
+	WinGetClass, classWin, ahk_id %win%
 	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) || WinExist("ahk_class Shell_SecondaryTrayWnd ahk_id " . win) ; exclude the taskbar
 	{
 		Return, false
 	}
-	SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
-	WinExist("ahk_id " . win) ; set the last found window for convenience
-	Return, (ErrorLevel == HTCAPTION)
+	else if classWin contains %SloppyGUIPrograms%
+	{
+		WinExist("ahk_id " . win) ; set the last found window for later use
+		if (y >= yWin && y < yWin + 30 * A_ScreenDPI / 96) ; if within title bar width
+		{
+			Return, true
+		}
+		else
+		{
+			Return, false
+		}
+	}
+	else
+	{
+		WinExist("ahk_id " . win) ; set the last found window for later use
+		SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
+		Return, (ErrorLevel == HTCAPTION)
+	}
 }
 
 #If MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
