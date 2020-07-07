@@ -1,10 +1,10 @@
 #NoEnv ; recommended for performance and compatibility with future AutoHotkey releases
 #SingleInstance ignore ; allow only one instance of this script to be running
 SendMode Input ; recommended for new scripts due to its superior speed and reliability
-SetWorkingDir %A_ScriptDir% ; ensures a consistent starting directory
+SetWorkingDir %A_ScriptDir% ; ensure a consistent starting directory
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.13.0-beta"
+ScriptVersion := "1.3.14.0-beta"
 CopyrightNotice := "Copyright (c) 2018-2020 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
@@ -342,7 +342,7 @@ MouseIsOverTitlebar()
 	else
 	{
 		WinExist("ahk_id " . win) ; set the last found window for later use
-		SendMessage, WM_NCHITTEST, , x | (y << 16), , ahk_id %win%
+		SendMessage, WM_NCHITTEST, , (x & 0xFFFF) | (y & 0xFFFF) << 16, , ahk_id %win%
 		Return, (ErrorLevel == HTCAPTION)
 	}
 }
