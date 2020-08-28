@@ -1,10 +1,11 @@
 #NoEnv ; recommended for performance and compatibility with future AutoHotkey releases
 #SingleInstance ignore ; allow only one instance of this script to be running
+;#Warn ; enable warnings to assist with detecting common errors
 SendMode Input ; recommended for new scripts due to its superior speed and reliability
 SetWorkingDir %A_ScriptDir% ; ensure a consistent starting directory
 
 ScriptName := "CClose"
-ScriptVersion := "1.3.14.0-beta"
+ScriptVersion := "1.4.0.0"
 CopyrightNotice := "Copyright (c) 2018-2020 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
@@ -40,13 +41,31 @@ IniRead, TEXT_MenuTitleBarRightClick, %LangFile%, %Language%, TEXT_MenuTitleBarR
 IniRead, TEXT_MenuTitleBarHoldLeftClick, %LangFile%, %Language%, TEXT_MenuTitleBarHoldLeftClick, Hold left click on title bar to toggle window always on top
 IniRead, TEXT_MenuEscKeyDoublePress, %LangFile%, %Language%, TEXT_MenuEscKeyDoublePress, Double press Esc key to close active window
 IniRead, TEXT_MenuTaskbarButtonRightClick, %LangFile%, %Language%, TEXT_MenuTaskbarButtonRightClick, Right click on taskbar button to move pointer to "Close window"
-IniRead, TEXT_HelpMsg1, %LangFile%, %Language%, TEXT_HelpMsg1, Middle click   	+ title bar     	= close window
-IniRead, TEXT_HelpMsg2, %LangFile%, %Language%, TEXT_HelpMsg2, Right click    	+ title bar     	= minimize window
-IniRead, TEXT_HelpMsg3, %LangFile%, %Language%, TEXT_HelpMsg3, Hold left click	+ title bar     	= toggle window always on top
+IniRead, TEXT_HelpMsg1, %LangFile%, %Language%, TEXT_HelpMsg1, Middle click   	+ title bar[1]  	= close window
+IniRead, TEXT_HelpMsg2, %LangFile%, %Language%, TEXT_HelpMsg2, Right click    	+ title bar[1]  	= minimize window[2]
+IniRead, TEXT_HelpMsg3, %LangFile%, %Language%, TEXT_HelpMsg3, Hold left click	+ title bar[1]  	= toggle window always on top
 IniRead, TEXT_HelpMsg4, %LangFile%, %Language%, TEXT_HelpMsg4, Double press   	+ Esc key       	= close active window
 IniRead, TEXT_HelpMsg5, %LangFile%, %Language%, TEXT_HelpMsg5, Right click    	+ taskbar button	= move pointer to "Close window"
-TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`n" . TEXT_HelpMsg4 . "`n" . TEXT_HelpMsg5
+IniRead, TEXT_HelpMsg6, %LangFile%, %Language%, TEXT_HelpMsg6, [1] Few programs don't have proper GUIs. Either there isn't a title bar, or the whole interface is technically a giant title bar. In such cases, title bar related functions will not work as expected. You can solve this issue by adding those programs to the exception list in advanced settings.
+IniRead, TEXT_HelpMsg7, %LangFile%, %Language%, TEXT_HelpMsg7, [2] Hold right click for a normal right click.
+TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`n" . TEXT_HelpMsg4 . "`n" . TEXT_HelpMsg5 . "`n`n" . TEXT_HelpMsg6 . "`n`n" . TEXT_HelpMsg7
 TEXT_AboutMsg := ScriptName . " " . ScriptVersion . "`n`n" . CopyrightNotice
+
+IniRead, TEXT_AdvancedSettings, %LangFile%, %Language%, TEXT_AdvancedSettings, Advanced Settings
+
+IniRead, TEXT_TitleBarExceptionList, %LangFile%, %Language%, TEXT_TitleBarExceptionList, Title Bar Exception List
+IniRead, TEXT_WindowInfo, %LangFile%, %Language%, TEXT_WindowInfo, Window Info
+IniRead, TEXT_Title, %LangFile%, %Language%, TEXT_Title, Title
+IniRead, TEXT_Class, %LangFile%, %Language%, TEXT_Class, Class
+IniRead, TEXT_EXE, %LangFile%, %Language%, TEXT_EXE, EXE
+IniRead, TEXT_PID, %LangFile%, %Language%, TEXT_PID, PID
+IniRead, TEXT_FollowMouse, %LangFile%, %Language%, TEXT_FollowMouse, Follow Mouse
+IniRead, TEXT_NotFrozen, %LangFile%, %Language%, TEXT_NotFrozen, (Hold Ctrl or Shift to suspend updates)
+IniRead, TEXT_Frozen, %LangFile%, %Language%, TEXT_Frozen, (Updates suspended)
+IniRead, TEXT_BlackList, %LangFile%, %Language%, TEXT_BlackList, Blacklist
+IniRead, TEXT_ExceptionList, %LangFile%, %Language%, TEXT_ExceptionList, Exception List
+IniRead, TEXT_Add, %LangFile%, %Language%, TEXT_AddClass, Add
+IniRead, TEXT_Delete, %LangFile%, %Language%, TEXT_Delete, Delete
 
 ; add the tray menu
 Menu, Tray, NoStandard ; remove the standard menu items
@@ -60,6 +79,8 @@ Menu, SettingMenu, Add, %TEXT_MenuTitleBarRightClick%, ConfigSetting
 Menu, SettingMenu, Add, %TEXT_MenuTitleBarHoldLeftClick%, ConfigSetting
 Menu, SettingMenu, Add, %TEXT_MenuEscKeyDoublePress%, ConfigSetting
 Menu, SettingMenu, Add, %TEXT_MenuTaskbarButtonRightClick%, ConfigSetting
+Menu, SettingMenu, Add
+Menu, SettingMenu, Add, %TEXT_AdvancedSettings%, ConfigAdvSetting
 Menu, Tray, Add, %TEXT_Settings%, :SettingMenu
 Menu, Tray, Add
 Menu, Tray, Add, %TEXT_Help%, ShowHelpMsg
@@ -150,9 +171,11 @@ else ; else update the autostart setting
 }
 
 ; retrieve the list of apps that have no title bars or entire GUI as title bars
-IniRead, SloppyGUIPrograms, %ConfigFile%, Advanced, SloppyGUIPrograms, %A_Space%
+IniRead, TitleBarExceptionList, %ConfigFile%, Advanced, TitleBarExceptionList, %A_Space%
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Return ; end of the auto-execute section
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; ensure ConfigDir exists
 EnsureConfigDirExists:
@@ -179,6 +202,9 @@ ConfigSetting(ItemName, ItemPos, MenuName)
 		}
 	}
 }
+
+ConfigAdvSetting:
+#Include Advanced Settings.ahk
 
 AutostartProgram:
 IsAutostart := !IsAutostart
@@ -318,33 +344,37 @@ MouseIsOver(WinTitle)
 MouseIsOverTitlebar()
 {
 	static WM_NCHITTEST := 0x84, HTCAPTION := 2
-	global SloppyGUIPrograms
+	global TitleBarExceptionList
 	CoordMode, Mouse, Screen
 	MouseGetPos, x, y, win
 	WinGetPos, xWin, yWin, , , ahk_id %win%
-	WinGetClass, classWin, ahk_id %win%
+;	WinGetClass, classWin, ahk_id %win%
+	WinGet, exeWin, ProcessName, ahk_id %win%
 	if WinExist("ahk_class Shell_TrayWnd ahk_id " . win) || WinExist("ahk_class Shell_SecondaryTrayWnd ahk_id " . win) ; exclude the taskbar
 	{
 		Return, false
 	}
-	else if classWin contains %SloppyGUIPrograms%
-	{
-		WinExist("ahk_id " . win) ; set the last found window for later use
-		if (y >= yWin && y < yWin + 30 * A_ScreenDPI / 96) ; if within title bar width
-		{
-			Return, true
-		}
-		else
-		{
-			Return, false
-		}
-	}
 	else
 	{
 		WinExist("ahk_id " . win) ; set the last found window for later use
-		SendMessage, WM_NCHITTEST, , (x & 0xFFFF) | (y & 0xFFFF) << 16, , ahk_id %win%
-		Return, (ErrorLevel == HTCAPTION)
+		Loop, Parse, TitleBarExceptionList, `|
+		{
+			if (exeWin == A_LoopField) ; if item already exists
+			{
+				if (y >= yWin && y < yWin + 30 * A_ScreenDPI / 96) ; if within title bar width
+				{
+					Return, true
+				}
+				else
+				{
+					Return, false
+				}
+			}
+		}
 	}
+	WinExist("ahk_id " . win) ; set the last found window for later use
+	SendMessage, WM_NCHITTEST, , (x & 0xFFFF) | (y & 0xFFFF) << 16, , ahk_id %win%
+	Return, (ErrorLevel == HTCAPTION)
 }
 
 #If MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd") ; apply the following hotkey only when the mouse is over the taskbar
