@@ -3,6 +3,7 @@
 *.bat
 *.exe
 
+build/
 dev/
 history/
 portable/

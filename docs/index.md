@@ -1,5 +1,3 @@
-# cclosemsix
-
 CClose is a Windows utility written in [AutoHotkey](https://autohotkey.com/). It helps you close windows faster and easier.  
 (Bonus: It also allows you to pin windows always on top.)
 
