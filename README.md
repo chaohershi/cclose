@@ -3,8 +3,8 @@
 CClose is a Windows utility written in [AutoHotkey](https://autohotkey.com/). It helps you close windows faster and easier.  
 (Bonus: It also allows you to pin windows always on top.)
 
-![CClose Demo: Right click + taskbar button = move pointer to "Close window".](img/Demo_RC_MovePtr.gif) 
-![CClose Demo: Hold left click + title bar = toggle window always on top.](img/Demo_HLC_Pin.gif)
+![CClose Demo: Right click + taskbar button = move pointer to "Close window".](docs/img/Demo_RC_MovePtr.gif) 
+![CClose Demo: Hold left click + title bar = toggle window always on top.](docs/img/Demo_HLC_Pin.gif)
 
 ## All Features
 
