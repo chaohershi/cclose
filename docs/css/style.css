@@ -1,0 +1,271 @@
+/* ==========================================================================
+    Global
+ ========================================================================== */
+* {
+    /*    border: 1px solid red;*/
+}
+
+.container {
+    max-width: calc(1000px - (30px * 2));
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+body {
+    background: #333;
+    color: #fff;
+    margin: 0;
+}
+
+.section-header {
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+h4 {
+    line-height: 1.3em;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-size: x-large;
+}
+
+.navbar {
+    font-size: large;
+    background-color: transparent;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    transition: padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
+}
+
+.affix {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: #242328;
+}
+
+/* Home Section */
+#home-section {
+    background: url(../img/Snipaste_2020-09-09_19-16-11.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.dark-overlay {
+    min-height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* 	background-image: linear-gradient(to bottom right,#002f4b,#dc4225); */
+}
+
+.home-inner {
+    padding-top: 150px;
+    text-align: center;
+}
+
+#arrowDown {
+    position: absolute;
+    z-index: 2;
+    bottom: 10px;
+}
+
+.fa-long-arrow-alt-down {
+    padding-top: 20px;
+    color: #FFFFFF;
+    content: '\f35a';
+    /* You should use \ and not /*/
+    font-family: "Font Awesome 5 Free";
+    /* This is the correct font-family */
+    font-style: normal;
+    font-weight: 900;
+    font-size: 40px;
+    text-decoration: none;
+
+    /*
+ animation-name: flash;
+animation-duration: 2s;
+animation-timing-function: linear;
+animation-iteration-count: infinite;
+*/
+}
+
+.animatedText:hover {
+    animation-name: pulse;
+    animation-duration: 2s;
+    /*     animation-timing-function: linear;
+    animation-iteration-count: infinite; */
+}
+
+/* Feature Section */
+.img-fluid {
+    width: 400px;
+    height: auto;
+}
+
+.featureTextLeft {
+    padding-top: 40px;
+}
+
+.featureTextRight {
+    padding-top: 40px;
+    padding-left: 66px;
+}
+
+/* Download Section */
+.downloadButton {
+    background-color: #8fb1cc;
+    color: #f8f9fa;
+    width: 200px;
+    margin-bottom: 60px;
+    border: 0px solid #bfc4c5
+}
+
+.downloadButton:hover {
+    background-color: #759cc9;
+    color: #f8f9fa;
+}
+
+/* Testimonial Section */
+.carousel-item {
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+.carousel-item img {
+    margin-bottom: 10px;
+}
+
+.carousel-item p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.carousel-item small {
+    opacity: 0.8;
+}
+
+.carousel-indicators li {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: #7c7d7d;
+}
+
+.carousel-indicators .active {
+    background-color: #333333;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    bottom: 50%;
+}
+
+.fa-chevron-left,
+.fa-chevron-right {
+    color: black;
+    font-size: 2rem;
+}
+
+/* Purchase Section */
+.table {
+    background-color: #333333;
+}
+
+table.table-bordered,
+.table-dark th {
+    border: 1px solid #c8c8c9;
+}
+
+table.table-bordered > thead > tr > th {
+    border: 1px solid #c8c8c9;
+}
+
+table.table-bordered > tbody > tr > td {
+    border: 1px solid #c8c8c9;
+}
+
+/* Support Section */
+a {
+    color: #8fb1cc;
+}
+
+a:hover {
+    color: #759cc9;
+    text-decoration: none;
+}
+
+/* Footer */
+.footerLeft {
+    padding-top: 50px;
+    padding-bottom: 35px;
+    text-align: left;
+}
+
+.footerCenter {
+    padding-top: 50px;
+    padding-bottom: 35px;
+    text-align: center;
+}
+
+.footerRight {
+    padding-top: 50px;
+    padding-bottom: 35px;
+    text-align: right;
+}
+
+.footerLink {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* ==========================================================================
+    License Agreement & Privacy Policy
+ ========================================================================== */
+
+/* Header */
+#licenseHeader {
+    color: #fff;
+}
+
+/* ==========================================================================
+    Window width less than 768px
+ ========================================================================== */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .featureTextLeft {
+        text-align: center;
+    }
+
+    .featureTextRight {
+        padding-left: 15px;
+        text-align: center;
+    }
+
+    .footerLeft{
+        padding-top: 5px;
+        padding-bottom: 2px;
+        text-align: center
+    }
+    
+    .footerRight{
+        padding-top: 5px;
+        padding-bottom: 2px;
+        text-align: center
+    }
+    
+    .footerCenter{
+        padding-top: 5px;
+        padding-bottom: 2px;
+        text-align: center
+    }
+}
