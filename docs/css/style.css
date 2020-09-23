@@ -52,7 +52,6 @@ h4 {
     background: url(../img/Snipaste_2020-09-09_19-16-11.png);
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed;
     min-height: 100vh;
 }
 
@@ -161,9 +160,8 @@ animation-iteration-count: infinite;
     background-color: #333333;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-    bottom: 50%;
+.carousel-control {
+    height: 100px;
 }
 
 .fa-chevron-left,
