@@ -24,6 +24,11 @@ body {
     padding-bottom: 1em;
 }
 
+.row {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 h4 {
     line-height: 1.3em;
 }
@@ -47,6 +52,10 @@ h4 {
     background-color: #242328;
 }
 
+.daffix {
+    background-color: #242328;
+}
+
 /* Home Section */
 #home-section {
     background: url(../img/Snipaste_2020-09-09_19-16-11.png);
@@ -58,7 +67,6 @@ h4 {
 .dark-overlay {
     min-height: 100vh;
     background-color: rgba(0, 0, 0, 0.8);
-    /* 	background-image: linear-gradient(to bottom right,#002f4b,#dc4225); */
 }
 
 .home-inner {
@@ -66,37 +74,9 @@ h4 {
     text-align: center;
 }
 
-#arrowDown {
-    position: absolute;
-    z-index: 2;
-    bottom: 10px;
-}
-
-.fa-long-arrow-alt-down {
-    padding-top: 20px;
-    color: #FFFFFF;
-    content: '\f35a';
-    /* You should use \ and not /*/
-    font-family: "Font Awesome 5 Free";
-    /* This is the correct font-family */
-    font-style: normal;
-    font-weight: 900;
-    font-size: 40px;
-    text-decoration: none;
-
-    /*
- animation-name: flash;
-animation-duration: 2s;
-animation-timing-function: linear;
-animation-iteration-count: infinite;
-*/
-}
-
 .animatedText:hover {
     animation-name: pulse;
     animation-duration: 2s;
-    /*     animation-timing-function: linear;
-    animation-iteration-count: infinite; */
 }
 
 /* Feature Section */
@@ -134,6 +114,7 @@ animation-iteration-count: infinite;
     padding-right: 80px;
     padding-bottom: 30px;
     margin-bottom: 30px;
+    min-height: 150px;
 }
 
 .carousel-item img {
@@ -234,7 +215,30 @@ a:hover {
 /* ==========================================================================
     Window width less than 768px
  ========================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 768px) and (min-width: 600px) {
+    .container {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    .featureTextLeft {
+        text-align: center;
+    }
+
+    .featureTextRight {
+        padding-left: 15px;
+        text-align: center;
+    }
+
+    .carousel-item {
+        min-height: 250px;
+    }
+}
+
+/* ==========================================================================
+    Window width less than 600px
+ ========================================================================== */
+@media (max-width: 600px) {
     .container {
         padding-left: 10px;
         padding-right: 10px;
@@ -249,20 +253,39 @@ a:hover {
         text-align: center;
     }
 
-    .footerLeft{
-        padding-top: 5px;
+    .btn-group > .btn-group:not(:last-child) > .btn,
+    .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+        border-top-right-radius: 0.3rem;
+        border-bottom-right-radius: 0.3rem;
+    }
+
+    .btn-group > .btn-group:not(:first-child) > .btn,
+    .btn-group > .btn:not(:first-child) {
+        border-top-left-radius: 0.3rem;
+        border-bottom-left-radius: 0.3rem;
+    }
+
+    .carousel-item {
+        min-height: 410px;
+    }
+
+    .table-dark th {
+        padding-right: 5px;
+    }
+    .footerLeft {
+        padding-top: 25px;
         padding-bottom: 2px;
         text-align: center
     }
-    
-    .footerRight{
+
+    .footerRight {
         padding-top: 5px;
-        padding-bottom: 2px;
+        padding-bottom: 25px;
         text-align: center
     }
-    
-    .footerCenter{
-        padding-top: 5px;
+
+    .footerCenter {
+        padding-top: 2px;
         padding-bottom: 2px;
         text-align: center
     }

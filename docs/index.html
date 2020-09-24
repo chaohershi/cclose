@@ -4,12 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Hao Li">
-    <meta name="last-modified" content="September 2020">
+    <meta name="author" content="Hao Li & Chaohe Shi">
 
     <title>CClose</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Font Awesome CSS-->
@@ -68,7 +67,7 @@
             <div class="home-inner container">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <h1>Improve your productivity with simple clicks</h1>
+                        <h1 class="animatedText">Improve your productivity with simple clicks</h1>
                         <h2 class="animatedText">Fast pin windows always on top</h2>
                         <h2 class="animatedText">Quickly close windows</h2>
                         <h2 class="animatedText">and more!</h2>
@@ -77,14 +76,9 @@
                         <br>
                         <br>
                         <div class="btn-group flex-wrap" data-toggle="buttons">
-                           <a href="https://github.com/chaohershi/cclose/releases/latest" target="_blank" class="btn btn-lg downloadButton">Download CClose</a>
-                           <a href="#" class="btn btn-lg downloadButton" onclick="alertMsg()">Buy CClose Pro</a>
+                            <a href="https://github.com/chaohershi/cclose/releases/latest" target="_blank" class="btn btn-lg downloadButton">Download CClose</a>
+                            <a href="https://www.microsoft.com/en-us/p/cclose-pro/9nzs8jpfz8hg" target="_blank" class="btn btn-lg downloadButton">Buy CClose Pro</a>
                         </div>
-                        <script>
-                                function alertMsg() {
-                                    alert("Coming Soon...");
-                                }
-                        </script>
                     </div>
                 </div>
             </div>
@@ -171,8 +165,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-12 text-center">
                     <h4>Windows Desktop Version</h4>
-                    <a href="#" class="btn btn-lg downloadButton" role="button" aria-pressed="true">CClose 1.3.4.0 x64</a>
-
+                    <a href="https://github.com/chaohershi/cclose/releases/latest" target="_blank" class="btn btn-lg downloadButton">CClose 1.3.4.0 x64</a>
                 </div>
             </div>
         </div>
@@ -272,7 +265,7 @@
             <h1 class="section-header">Purchase</h1>
             <!--Comparison table-->
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <table class="table table-bordered table-dark table-hover">
                         <thead>
                             <tr>
@@ -337,6 +330,14 @@
                         </tbody>
                     </table>
                     <p>*In development</p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 text-center py-3">
+                            <h4>Microsoft Store Version</h4>
+                            <div class="btn-group flex-wrap" data-toggle="buttons">
+                                <a href="https://www.microsoft.com/en-us/p/cclose-pro/9nzs8jpfz8hg" target="_blank" class="btn btn-lg downloadButton">Buy CClose Pro</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -345,8 +346,12 @@
     <!-- Support section -->
     <section id="support-section" class="bg-light text-muted py-5">
         <div class="container py-5">
+           <div class="row">
+               <div class="col-md-12">
             <h1 class="section-header">Support</h1>
             <p>If you have any suggestion or you encounter any problem when using CClose:<br>Please join the <a href="https://t.me/joinchat/J8RxqhpQ-Njw89enX3fSVw" target="_blank">telegram chat group</a> to give us your feedback.</p>
+             </div>
+           </div>
         </div>
     </section>
 
@@ -424,6 +429,16 @@
             }
         });
 
-    </script>
+        // Add bg color for Navbar for sm screen
+        $(".navbar-toggler").click(function() {
 
+            $(".navbar").on('show.bs.collapse', function() {
+                $('.navbar').addClass('daffix');
+            });
+
+            $(".navbar").on('hide.bs.collapse', function() {
+                $('.navbar').removeClass('daffix');
+            });
+        });
+    </script>
 </body>
