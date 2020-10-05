@@ -1,447 +1,179 @@
-<!doctype html>
-<html lang="zh">
+---
+# DNT means "Do Not Translate", usually the item marked as DNT is a HTML attribute, or a variable used for Liquid control flow, or reserved for Jekyll
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Hao Li & Chaohe Shi">
+layout: default # DNT
 
+title: CClose
+lang: zh
 
-    <title>CClose</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+links:
+  lang: index.html
+  download: >-
+    https://github.com/chaohershi/cclose/releases/latest
+  buy: >-
+    https://www.microsoft.com/store/apps/9nzs8jpfz8hg
+  msStore: >-
+    ms-windows-store://pdp/?ProductId=9nzs8jpfz8hg
+  github: >-
+    https://github.com/chaohershi/cclose
+  ghIssue: >-
+    https://github.com/chaohershi/cclose/issues
+  zhihu: >-
+    https://www.zhihu.com/question/23537624/answer/575758528
+  tgGroupChat: >-
+    https://t.me/joinchat/J8RxqhpQ-Njw89enX3fSVw
+  mailto: >-
+    mailto:cclose.app@gmail.com
+  license: >-
+    license.html
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="css/all.css">
-    <!-- Aminate CSS -->
-    <link rel="stylesheet" href="css/animate.min.css">
-    <!-- Customized CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- JQuery JS -->
-    <script src="js/jquery-3.5.1.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="js/bootstrap.min.js"></script>
-</head>
+navbar:
+  navbrand: CClose
+  langInd: EN/中
+  navs:
+    - title: 功能
+      section: feature # DNT
 
-<body data-spy="scroll" data-target="#main-nav">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top" id="main-nav">
-        <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#home-section">CClose</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#feature-section">功能</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#download-section">下载</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#testimonial-section">感言</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#purchase-section">购买</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#support-section">支持</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link js-scroll-trigger" href="index.html">EN/中</a>
-                    </li>
-                </ul>
-            </div>
+    - title: 下载
+      section: download # DNT
 
-        </div>
-    </nav>
+    - title: 感言
+      section: testimonial # DNT
 
-    <!-- Home Section -->
-    <header id="home-section">
-        <div class="dark-overlay">
-            <div class="home-inner container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <h1 class="animatedText">提高生产效率 提升窗口操作体验</h1>
-                        <h2 class="animatedText">一键置顶窗口 快捷关闭窗口 </h2>
-                        <h2 class="animatedText">还不止于此</h2>
-                        <a href="#feature-section" id="learnMore">了解更多</a>
-                        <br>
-                        <br>
-                        <br>
-                        <div class="btn-group flex-wrap" data-toggle="buttons">
-                            <a href="https://github.com/chaohershi/cclose/releases/latest" target="_blank" class="btn btn-lg downloadButton">下载 CClose</a>
-                            <a href="https://www.microsoft.com/zh-cn/p/cclose-pro/9nzs8jpfz8hg" target="_blank" class="btn btn-lg downloadButton">购买 CClose Pro</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    - title: 购买
+      section: purchase # DNT
 
-    <!-- Feature section -->
-    <section id="feature-section" class="bg-light text-muted py-5">
-        <div class="container py-5">
-            <h1 class="section-header">功能</h1>
-            <!-- Feature 1 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 featureTextLeft">
-                    <h4><b>置顶/取消置顶窗口</b>：<br>左键长按 + 标题栏</h4>
-                    <p>
-                        在工作中我们有时会想让某个窗口置顶，比如微信、记事本、Word文档等，现在能1秒置顶了。
-                    </p>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="img/img1.png" alt="左键长按 + 标题栏 = 置顶/取消置顶窗口" class="img-fluid">
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 2 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center">
-                    <img src="img/img2.png" alt="双击 + Esc 键 = 关闭活动窗口" class="img-fluid">
-                </div>
-                <div class="col-md-5 featureTextRight">
-                    <h4><b>快捷关闭活动窗口</b>：<br>双击 + Esc 键</h4>
-                    <p>
-                        快速关闭活动窗口？没问题。
-                    </p>
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 3 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 featureTextLeft">
-                    <h4><b>快捷关闭窗口</b>：<br>中键 + 标题栏</h4>
-                    <p>
-                        就像在网页浏览器中可以使用中键关闭页面一样，现在其他窗口也能使用中键关闭了。
-                    </p>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="img/img3.png" alt="中键 + 标题栏 = 关闭窗口" class="img-fluid">
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 4 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center">
-                    <img src="img/img4.png" alt="右键 + 标题栏 = 最小化窗口" class="img-fluid">
-                </div>
-                <div class="col-md-6 featureTextRight">
-                    <h4><b>快捷最小化窗口</b>：<br>右键 + 标题栏</h4>
-                    <p>
-                        再也不用瞄准最小化按钮了。
-                    </p>
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 5 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 featureTextLeft">
-                    <h4><b>移动鼠标至「关闭窗口」</b>：<br>右键 + 任务栏按钮</h4>
-                    <p>
-                        更加方便。
-                    </p>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="img/img5cn.png" alt="右键 + 任务栏按钮 = 移动鼠标至「关闭窗口」" class="img-fluid">
-                </div>
-            </div>
-        </div>
-    </section>
+    - title: 支持
+      section: support # DNT
 
-    <!-- Download section -->
-    <section id="download-section" class="py-5">
-        <div class="container py-5">
-            <h1 class="section-header">下载</h1>
-            <div class="row justify-content-center">
-                <div class="col-md-12 text-center">
-                    <h4>Windows 桌面版</h4>
-                    <a href="https://github.com/chaohershi/cclose/releases/latest" target="_blank" class="btn btn-lg downloadButton">CClose 1.3.4.0 x64</a>
+home:
+  section: home # DNT
+  sloganH1: 提高生产效率 提升窗口操作体验
+  sloganH2:
+    - text: 一键置顶窗口 快捷关闭窗口
+    - text: 还不止于此
+  more: 了解更多
+  download: 下载 CClose
+  buy: 购买 CClose Pro
 
-                </div>
-            </div>
-        </div>
-    </section>
+features:
+  - title: >-
+      置顶 / 取消置顶窗口：
+    subtitle: 左键长按 + 标题栏
+    text: 在工作中我们有时会想让某个窗口置顶，比如微信、记事本、Word文档等，然而它们并没有置顶功能，很不方便。有了 CClose，各种窗口都能 1 秒置顶了。
+    img: assets/img/img1.png
+    alt: 左键长按 + 标题栏 = 置顶/取消置顶窗口
+    nohr: true # DNT
 
-    <!-- Testimonial section -->
-    <section id="testimonial-section" class="bg-light text-muted py-5">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="section-header">感言</h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="carousel slide" data-ride="carousel" id="quote-carousel">
+  - title: >-
+      关闭活动窗口：
+    subtitle: 双击 + Esc 键
+    text: 想要快速关闭活动窗口？双击 Esc 键，就是这么简单。
+    img: assets/img/img2.png
+    alt: 双击 + Esc 键 = 关闭活动窗口
+    RTL: true # DNT, right to left
 
-                        <!-- Bottom Carousel Indicators -->
-                        <ol class="carousel-indicators">
-                            <li data-target="#quote-carousel" data-slide-to="0" class="active"></li>
-                            <li data-target="#quote-carousel" data-slide-to="1"></li>
-                            <li data-target="#quote-carousel" data-slide-to="2"></li>
-                            <li data-target="#quote-carousel" data-slide-to="3"></li>
-                        </ol>
+  - title: >-
+      关闭窗口：
+    subtitle: 中键 + 标题栏
+    text: 就像在网页浏览器中可以使用中键关闭页面一样，现在其他窗口也能使用中键关闭了。
+    img: assets/img/img3.png
+    alt: 中键 + 标题栏 = 关闭窗口
 
-                        <!-- Carousel Slides / Quotes -->
-                        <div class="carousel-inner">
+  - title: >-
+      最小化窗口：
+    subtitle: 右键 + 标题栏
+    text: 再也不用瞄准最小化按钮了。
+    img: assets/img/img4.png
+    alt: 右键 + 标题栏 = 最小化窗口
+    RTL: true # DNT
 
-                            <!-- Quote 1 -->
-                            <div class="carousel-item active">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_male_1.png" alt="user_male_1" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>已用上，对于习惯kde的我来说很方便，感谢答主开源、分享</p>
-                                        <small>——spirit1431007</small>
+  - title: >-
+      移动鼠标至「关闭窗口」：
+    subtitle: 右键 + 任务栏按钮
+    text: 更少的鼠标移动，更加的方便。
+    img: assets/img/img5_cn.png
+    alt: 右键 + 任务栏按钮 = 移动鼠标至「关闭窗口」
 
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Quote 2 -->
-                            <div class="carousel-item">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_female_1.png" alt="user_female_1" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>实在是太喜欢这个软件啦，超方便！而且不花里胡哨没有什么存在感！</p>
-                                        <small>——看到我请催我复习</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Quote 3 -->
-                            <div class="carousel-item">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_male_2.png" alt="user_male_2" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>真的太好用了，相见恨晚呐，对于我这种小屏幕笔记本来说置顶这个功能太重要了</p>
-                                        <small>——enterhalf</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Quote 4 -->
-                            <div class="carousel-item">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_female_2.png" alt="user_female_2" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>谢谢，超好用！(￣▽￣)"</p>
-                                        <small>——草头将</small>
-                                    </div>
+download:
+  info: Windows 桌面版
+  button: 下载 CClose
 
-                                </div>
-                            </div>
-                        </div>
+testimonials:
+  - slide: 0
+    img: assets/img/user_male_1.png
+    alt: user avatar
+    quote: 已用上，对于习惯kde的我来说很方便，感谢答主开源、分享
+    author: —spirit1431007
 
-                        <!-- Carousel Buttons Next/Prev -->
-                        <a class="carousel-control carousel-control-prev" href="#quote-carousel" data-slide="prev">
-                            <i class="fa fa-chevron-left"></i>
-                        </a>
-                        <a class="carousel-control carousel-control-next" href="#quote-carousel" data-slide="next">
-                            <i class="fa fa-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  - slide: 1
+    img: assets/img/user_female_1.png
+    alt: user avatar
+    quote: 实在是太喜欢这个软件啦，超方便！而且不花里胡哨没有什么存在感！
+    author: —看到我请催我复习
 
-    <!-- Purchase section -->
-    <section id="purchase-section" class="py-5">
-        <div class="container py-5">
-            <h1 class="section-header">购买</h1>
-            <!--Comparison table-->
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <table class="table table-bordered table-dark table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col">CClose</th>
-                                <th scope="col">CClose Pro</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">快捷关闭窗口</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">快捷最小化窗口</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">快捷置顶窗口</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">快捷键关闭活动窗口</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">快捷关闭任务栏按钮</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">支持非正常窗口</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">快捷键关闭黑名单</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">快捷关闭黑名单*</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">置顶快捷键*</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">支持开发者</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i>
-                                    <h7>&nbsp;</h7><i class="fas fa-heart"></i>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p>*开发中</p>    
-                    <div class="row justify-content-center">
-                        <div class="col-md-12 text-center py-3">
-                            <h4>Microsoft 商店版本</h4>
-                            <div class="btn-group flex-wrap" data-toggle="buttons">
-                                <a href="https://www.microsoft.com/zh-cn/p/cclose-pro/9nzs8jpfz8hg" target="_blank" class="btn btn-lg downloadButton">购买 CClose Pro</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  - slide: 2
+    img: assets/img/user_male_2.png
+    alt: user avatar
+    quote: 真的太好用了，相见恨晚呐，对于我这种小屏幕笔记本来说置顶这个功能太重要了
+    author: —enterhalf
 
-    <!-- Support section -->
-    <section id="support-section" class="bg-light text-muted py-5">
-        <div class="container py-5">
-           <div class="row">
-               <div class="col-md-12">
-            <h1 class="section-header">支持</h1>
-            <p>如果你想要表达感谢或者提出建议：<br>- 可以在我的回答下评论：<br><a href="https://www.zhihu.com/question/23537624/answer/575758528" target="_blank">[Windows 下如何让一个窗口置顶？ - 知乎]</a>，或者私信联系。</p>
-            <p>如果你在使用 CClose 时遇到了问题：<br>- 欢迎提交问题至<a href="https://github.com/chaohershi/cclose/issues" target="_blank">[问题反馈]</a>中，感谢你的反馈。</p>                
-               </div>
-           </div>
-        </div>
-    </section>
+  - slide: 3
+    img: assets/img/user_female_2.png
+    alt: user avatar
+    quote: 谢谢，超好用！(￣▽￣)"
+    author: —草头将
 
-    <!-- Footer -->
-    <footer id="main-footer" class="bg-dark">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 footerLeft">
-                    <p>Copyright &copy; <span id="year"></span> Chaohe Shi</p>
-                </div>
-                <div class="col-md-4 footerCenter">
-                    <a href="https://github.com/chaohershi/cclose" target="_blank" class="footerLink"><span class="fab fa-github" style="font-size:22px"></span></a>
-                </div>
-                <div class="col-md-4 footerRight">
-                    <a href="license.html" target="_blank" class="footerLink" style="margin-right: 5px">许可协议 & 隐私政策</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+purchase:
+  thead:
+    - text:
+    - text: CClose
+    - text: CClose Pro
+  tbody:
+    - feature: 快捷置顶窗口
+      forFree: true # DNT
+    - feature: 使用 Esc 键快捷关闭活动窗口
+      forFree: true # DNT
+    - feature: 使用中键快捷关闭窗口
+      forFree: true # DNT
+    - feature: 使用右键快捷最小化窗口
+      forFree: true # DNT
+    - feature: 快捷关闭任务栏按钮
+      forFree: true # DNT
 
-    <script>
-        // Get the current year for the copyright
-        $('#year').text(new Date().getFullYear());
+    - feature: 支持没有正常标题栏的窗口
+    - feature: 使用 Esc 键快捷关闭活动窗口黑名单
+    - feature: 新功能 *
+    - feature: 支持开发者
+      addHeart: true # DNT
+  price:
+    text: 价格
+    free:
+    pro: ￥28 CNY **
+  info: 购买 CClose Pro
+  img: assets/img/get_it_from_MS_cn.svg
+  alt: Get it from Microsoft
+  notices:
+    - text: >-
+        * 从 CClose 1.3 开始，免费版将只提供缺陷修复，基本不再提供新功能，后续开发的新功能都只加入到 Pro 版本。
+        <br>** 一次性支付，包含免费升级。
+    - text: 如果您在 2020 年 9 月前捐赠过, 可获得八折优惠以及额外的捐赠数额 × 2 的折扣。详情请联系 <a href="mailto">cclose.app@gmail.com</a> 😉
 
-        // Initalize Scrollspy
-        $('body').scrollspy({
-            target: '#main-nav'
-        });
+support:
+  - text: >-
+      使用中遇到了问题？
+      <br>- 欢迎提交问题至 <a href="ghIssue">问题反馈</a>。
+  - text: >-
+      想要留下您的使用感言？
+      <br>- 非常欢迎您在 <a href="msStore">Microsoft 应用商店</a> 中评价留言。
+      <br>- 或者在我的回答下评论：<a href="zhihu">Windows 下如何让一个窗口置顶？ - 知乎</a>
+      <br>- 或者推荐 CClose 给您的朋友，告诉他们您的感言。
+  - text: >-
+      希望添加新功能？其他事宜？
+      <br>- 加入我们的 <a href="tgGroupChat">Telegram 用户群</a>。
+      <br>- 或者联系 <a href="mailto">cclose.app@gmail.com</a>。
 
-        // Smooth Scrolling
-        $("#main-nav a").on('click', function(event) {
-            if (this.hash !== "") {
-                event.preventDefault();
-
-                const hash = this.hash;
-
-                $('html, body').animate({
-                    scrollTop: $(hash).offset().top
-                }, 800, function() {
-
-                    window.location.hash = hash;
-                });
-            }
-        });
-
-        // Smooth Scrolling for Arrow Down
-        $("#learnMore").on('click', function(event) {
-            if (this.hash !== "") {
-                event.preventDefault();
-
-                const hash = this.hash;
-
-                $('html, body').animate({
-                    scrollTop: $(hash).offset().top
-                }, 800, function() {
-
-                    window.location.hash = hash;
-                });
-            }
-        });
-
-
-        // Closes responsive menu when a scroll trigger link is clicked
-        $(".js-scroll-trigger").click(function() {
-            $(".navbar-collapse").collapse("hide");
-        });
-
-
-
-        // Shrink and add bg color for Navbar
-        $(window).scroll(function() {
-            /* affix after scrolling 100px */
-            if ($(document).scrollTop() > 0) {
-                $('.navbar').addClass('affix');
-            } else {
-                $('.navbar').removeClass('affix');
-            }
-        });
-
-        // Add bg color for Navbar for sm screen
-        $(".navbar-toggler").click(function() {
-
-            $(".navbar").on('show.bs.collapse', function() {
-                $('.navbar').addClass('daffix');
-            });
-
-            $(".navbar").on('hide.bs.collapse', function() {
-                $('.navbar').removeClass('daffix');
-            });
-        });
-
-    </script>
-</body>
+footer:
+  copyright: 版权所有 &copy; 2018-<span id="year"></span> Chaohe Shi
+  license: 许可协议 & 隐私政策
+---

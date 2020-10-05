@@ -1,62 +1,307 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
+<html lang="{{page.lang}}">
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,maximum-scale=2">
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+<head>
+	<title>{{page.title}}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Hao Li, Chaohe Shi">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<!-- Font Awesome CSS-->
+	<link rel="stylesheet" href="assets/css/all.css">
+	<!-- Aminate CSS -->
+	<link rel="stylesheet" href="assets/css/animate.min.css">
+	<!-- Customized CSS -->
+	<link rel="stylesheet" href="assets/css/style.css">
+	<!-- JQuery JS -->
+	<script src="assets/js/jquery-3.5.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="assets/js/bootstrap.min.js"></script>
+</head>
 
-{% seo %}
-  </head>
+<body data-spy="scroll" data-target=".navbar">
+	<!-- Navbar Section -->
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+		<div class="container">
+			<a class="navbar-brand js-scroll-trigger" href="#{{page.home.section}}">{{page.navbar.navbrand}}</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav">
+					{%-for nav in page.navbar.navs%}
+					<li class="nav-item">
+						<a class="nav-link js-scroll-trigger" href="#{{nav.section}}">{{nav.title}}</a>
+					</li>
+					{%-endfor%}
+				</ul>
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item active">
+						<a class="nav-link js-scroll-trigger" href="{{page.links.lang}}">{{page.navbar.langInd}}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 
-  <body>
+	<!-- Home Section -->
+	<header id="{{page.home.section}}">
+		<div class="dark-overlay">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-md-12 text-center">
+						<h1 class="animated-text">{{page.home.sloganH1}}</h1>
+						{%-for slogan in page.home.sloganH2%}
+						<h2 class="animated-text">{{slogan.text}}</h2>
+						{%-endfor%}
+						<a href="#feature" id="learnMore">{{page.home.more}}</a>
+						<br>
+						<div class="btn-group flex-wrap">
+							<a class="btn btn-lg" href="{{page.links.download}}">{{page.home.download}}</a>
+							<a class="btn btn-lg" href="{{page.links.buy}}">{{page.home.buy}}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
+	<!-- Feature Section -->
+	<section id="{{page.navbar.navs[0].section}}" class="bg-light text-muted">
+		<div class="container">
+			<h1>{{page.navbar.navs[0].title}}</h1>
+			{%-for feature in page.features%}
+			{%-unless feature.nohr%}
+			<hr>
+			{%-endunless%}
+			{%-if feature.RTL%}
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center">
+					<img src="{{feature.img}}" alt="{{feature.alt}}" class="img-fluid">
+				</div>
+				<div class="col-md-6 feature-text">
+					<h4><b>{{feature.title}}</b><br>{{feature.subtitle}}</h4>
+					<p>{{feature.text}}</p>
+				</div>
+			</div>
+			{%-else%}
+			<div class="row justify-content-center">
+				<div class="col-md-6 feature-text">
+					<h4><b>{{feature.title}}</b><br>{{feature.subtitle}}</h4>
+					<p>{{feature.text}}</p>
+				</div>
+				<div class="col-md-6 text-center">
+					<img src="{{feature.img}}" alt="{{feature.alt}}" class="img-fluid">
+				</div>
+			</div>
+			{%-endif%}
+			{%-endfor%}
+		</div>
+	</section>
 
-          <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
-          <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+	<!-- Download Section -->
+	<section id="{{page.navbar.navs[1].section}}">
+		<div class="container">
+			<h1>{{page.navbar.navs[1].title}}</h1>
+			<div class="row justify-content-center">
+				<div class="col-md-12 text-center">
+					<h4>{{page.download.info}}</h4>
+					<a href="{{page.links.download}}" class="btn btn-lg downloadButton">{{page.download.button}}</a>
+				</div>
+			</div>
+		</div>
+	</section>
 
-          {% if site.show_downloads %}
-            <section id="downloads">
-              <a class="zip_download_link" href="{{ site.github.zip_url }}">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="{{ site.github.tar_url }}">Download this project as a tar.gz file</a>
-            </section>
-          {% endif %}
-        </header>
-    </div>
+	<!-- Testimonial Section -->
+	<section id="{{page.navbar.navs[2].section}}" class="bg-light text-muted">
+		<div class="container">
+			<h1>{{page.navbar.navs[2].title}}</h1>
+			<div class="row justify-content-center">
+				<div class="col-md-12">
+					<div class="carousel slide" data-ride="carousel" id="quote-carousel">
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        {{ content }}
-      </section>
-    </div>
+						<!-- Bottom Carousel Indicators -->
+						<ol class="carousel-indicators">
+							{%-for testimonial in page.testimonials%}
+							{%-if testimonial.slide == 0%}
+							<li data-target="#quote-carousel" data-slide-to="{{testimonial.slide}}" class="active"></li>
+							{%-else%}
+							<li data-target="#quote-carousel" data-slide-to="{{testimonial.slide}}"></li>
+							{%-endif%}
+							{%-endfor%}
+						</ol>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        {% if site.github.is_project_page %}
-        <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-        <p><a href="https://github.com/chaohershi/cclose/releases"><img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/chaohershi/cclose/total.svg?style=social"></a></p>
-      </footer>
-    </div>
+						<!-- Carousel Slides / Quotes -->
+						<div class="carousel-inner">
+							{%-for testimonial in page.testimonials%}
+							{%-if testimonial.slide == 0%}
+							<div class="carousel-item active">
+							{%-else%}
+							<div class="carousel-item">
+							{%-endif%}
+								<div class="row justify-content-center">
+									<div class="col-md-3 text-center">
+										<img src="{{testimonial.img}}" alt="{{testimonial.alt}}" class="rounded-circle">
+									</div>
+									<div class="col-md-6">
+										<p><i class="fas fa-quote-left" aria-hidden="true"></i>{{testimonial.quote}}</p>
+										<small>{{testimonial.author}}</small>
+									</div>
+								</div>
+							</div>
+							{%-endfor%}
+						</div>
 
-    {% if site.google_analytics %}
-      <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', '{{ site.google_analytics }}', 'auto');
-        ga('send', 'pageview');
-      </script>
-    {% endif %}
-  </body>
-</html>
+						<!-- Carousel Buttons Next/Prev -->
+						<a class="carousel-control carousel-control-prev" href="#quote-carousel" data-slide="prev">
+							<i class="fas fa-chevron-left"></i>
+						</a>
+						<a class="carousel-control carousel-control-next" href="#quote-carousel" data-slide="next">
+							<i class="fas fa-chevron-right"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Purchase Section -->
+	<section id="{{page.navbar.navs[3].section}}">
+		<div class="container">
+			<h1>{{page.navbar.navs[3].title}}</h1>
+			<!--Comparison table-->
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<table class="table table-bordered table-dark table-hover">
+						<thead>
+							<tr>
+								{%-for th in page.purchase.thead%}
+								<th scope="col">{{th.text}}</th>
+								{%-endfor%}
+							</tr>
+						</thead>
+						<tbody>
+							{%-for tb in page.purchase.tbody%}
+							<tr>
+								<th scope="row">{{tb.feature}}</th>
+								<td>{%-if tb.forFree%}<i class="fas fa-check"></i>{%-endif%}</td>
+								<td><i class="fas fa-check"></i>{%-if tb.addHeart%}&nbsp;<i class="fas fa-heart"></i>{%-endif%}</td>
+							</tr>
+							{%-endfor%}
+							<tr>
+								<th scope="row">{{page.purchase.price.text}}</th>
+								<td>{{page.purchase.price.free}}</td>
+								<td>{{page.purchase.price.pro}}</td>
+							</tr>
+						</tbody>
+					</table>
+					{%-for notice in page.purchase.notices%}
+					<p>{{notice.text | replace: "mailto", page.links.mailto}}</p>
+					{%-endfor%}
+					<div class="row justify-content-center">
+						<div class="col-md-12 text-center">
+							<h4>{{page.purchase.info}}</h4>
+							<a href="{{page.links.buy}}"><img src="{{page.purchase.img}}" alt="{{page.purchase.alt}}"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Support Section -->
+	<section id="{{page.navbar.navs[4].section}}" class="bg-light text-muted">
+		<div class="container">
+			<h1>{{page.navbar.navs[4].title}}</h1>
+			<div class="row justify-content-center">
+				<div class="col-md-12">
+					{%-for support in page.support%}
+					<p>{{support.text | replace: "msStore", page.links.msStore | replace: "ghIssue", page.links.ghIssue | replace: "zhihu", page.links.zhihu | replace: "tgGroupChat", page.links.tgGroupChat | replace: "mailto", page.links.mailto}}</p>
+					{%-endfor%}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-4 footer-left">
+					{{page.footer.copyright}}
+				</div>
+				<div class="col-md-4 footer-center">
+					<a href="{{page.links.github}}"><span class="fab fa-github" style="font-size:22px"></span></a>
+				</div>
+				<div class="col-md-4 footer-right">
+					<a href="{{page.links.license}}">{{page.footer.license}}</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Get the current year for the copyright notice
+		$("#year").text(new Date().getFullYear());
+
+		// Initalize scrollspy
+		$("body").scrollspy({
+			target: ".navbar"
+		});
+
+		// Smooth scrolling for .navbar
+		$(".navbar a").on("click", function(event) {
+			if (this.hash !== "") {
+				event.preventDefault();
+				const hash = this.hash;
+				$("html, body").animate({
+					scrollTop: $(hash).offset().top
+				}, 800, function() {
+					window.location.hash = hash;
+				});
+			}
+		});
+
+		// Smooth scrolling for #learnMore
+		$("#learnMore").on("click", function(event) {
+			if (this.hash !== "") {
+				event.preventDefault();
+				const hash = this.hash;
+				$("html, body").animate({
+					scrollTop: $(hash).offset().top
+				}, 800, function() {
+					window.location.hash = hash;
+				});
+			}
+		});
+
+		// Close the responsive menu when a scroll trigger link is clicked
+		$(".js-scroll-trigger").click(function() {
+			$(".navbar-collapse").collapse("hide");
+		});
+
+		// Change the navbar style
+		$(window).scroll(function() {
+			// add .affix after scrolling down from the top
+			if ($(document).scrollTop() > 100) {
+				$(".navbar").addClass("affix");
+			} else {
+				$(".navbar").removeClass("affix");
+			}
+		});
+
+		// Change the responsive menu style for small screen
+		$(".navbar-toggler").click(function() {
+			// add .another-affix when showing the menu
+			$(".navbar").on("show.bs.collapse", function() {
+				$(".navbar").addClass("another-affix");
+			});
+			// remove .another-affix after hidden the menu
+			$(".navbar").on("hidden.bs.collapse", function() {
+				$(".navbar").removeClass("another-affix");
+			});
+		});
+	</script>
+</body>

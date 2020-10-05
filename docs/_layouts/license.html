@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{page.lang}}">
+
+<head>
+	<title>{{page.title}}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Hao Li, Chaohe Shi">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+	<header id="license-header">
+		<div class="container">
+			<h1>{{page.header}}</h1>
+		</div>
+	</header>
+
+	<section id="license" class="bg-light text-muted">
+		<div class="container">
+			{%-for provision in page.provisions%}
+			<{{provision.tag}}>{{provision.text}}</{{provision.tag}}>
+			{%-endfor%}
+		</div>
+	</section>
+</body>

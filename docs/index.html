@@ -1,444 +1,177 @@
-<!doctype html>
-<html lang="en">
+---
+# DNT means "Do Not Translate", usually the item marked as DNT is a HTML attribute, or a variable used for Liquid control flow, or reserved for Jekyll
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Hao Li & Chaohe Shi">
+layout: default # DNT
 
-    <title>CClose</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+title: CClose
+lang: en
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="css/all.css">
-    <!-- Aminate CSS -->
-    <link rel="stylesheet" href="css/animate.min.css">
-    <!-- Customized CSS -->
-    <link rel="stylesheet" href="css/style.css">
-    <!-- JQuery JS -->
-    <script src="js/jquery-3.5.1.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="js/bootstrap.min.js"></script>
-</head>
+links:
+  lang: zh-cn.html
+  download: >-
+    https://github.com/chaohershi/cclose/releases/latest
+  buy: >-
+    https://www.microsoft.com/store/apps/9nzs8jpfz8hg
+  msStore: >-
+    ms-windows-store://pdp/?ProductId=9nzs8jpfz8hg
+  github: >-
+    https://github.com/chaohershi/cclose
+  ghIssue: >-
+    https://github.com/chaohershi/cclose/issues
+  tgGroupChat: >-
+    https://t.me/joinchat/J8RxqhpQ-Njw89enX3fSVw
+  mailto: >-
+    mailto:cclose.app@gmail.com
+  license: >-
+    license.html
 
-<body data-spy="scroll" data-target="#main-nav">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top" id="main-nav">
-        <div class="container">
-            <a class="navbar-brand js-scroll-trigger" href="#home-section">CClose</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#feature-section">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#download-section">Download</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#testimonial-section">Testimonials</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#purchase-section">Purchase</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#support-section">Support</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link js-scroll-trigger" href="zh-cn.html">EN/中</a>
-                    </li>
-                </ul>
-            </div>
+navbar:
+  navbrand: CClose
+  langInd: EN/中
+  navs:
+    - title: Features
+      section: feature # DNT
 
-        </div>
-    </nav>
+    - title: Download
+      section: download # DNT
 
-    <!-- Home Section -->
-    <header id="home-section">
-        <div class="dark-overlay">
-            <div class="home-inner container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <h1 class="animatedText">Improve your productivity with simple clicks</h1>
-                        <h2 class="animatedText">Fast pin windows always on top</h2>
-                        <h2 class="animatedText">Quickly close windows</h2>
-                        <h2 class="animatedText">and more!</h2>
-                        <a href="#feature-section" id="learnMore">Learn more</a>
-                        <br>
-                        <br>
-                        <br>
-                        <div class="btn-group flex-wrap" data-toggle="buttons">
-                            <a href="https://github.com/chaohershi/cclose/releases/latest" target="_blank" class="btn btn-lg downloadButton">Download CClose</a>
-                            <a href="https://www.microsoft.com/en-us/p/cclose-pro/9nzs8jpfz8hg" target="_blank" class="btn btn-lg downloadButton">Buy CClose Pro</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    - title: Testimonials
+      section: testimonial # DNT
 
-    <!-- Feature section -->
-    <section id="feature-section" class="bg-light text-muted py-5">
-        <div class="container py-5">
-            <h1 class="section-header">Features</h1>
-            <!-- Feature 1 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 featureTextLeft">
-                    <h4><b>Toggle window always on top</b>：<br>Hold left click + Title bar</h4>
-                    <p>
-                        Want to pin the windows always on top of others? By holding the left click on the title bar of the desired window for one second! You can also pin several windows at the same time.
-                    </p>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="img/img1.png" alt="Hold left click + Title bar = Toggle window always on top" class="img-fluid">
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 2 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center">
-                    <img src="img/img2.png" alt="Double press + Esc key = Close active window" class="img-fluid">
-                </div>
-                <div class="col-md-5 featureTextRight">
-                    <h4><b>Close active window</b>：<br>Double press + Esc key</h4>
-                    <p>
-                        Want to quickly the active window? No problem at all. Simply double press the ESC key.
-                    </p>
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 3 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 featureTextLeft">
-                    <h4><b>Close window</b>：<br>Middle click + Title bar</h4>
-                    <p>
-                        Do you love the feature of quickly closing the tabs in the web browser by middle clicking? With CClose, we bring that feature to all the windows. Middle click on the title bar to close the window!
-                    </p>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="img/img3.png" alt="Middle click + Title bar = Close window" class="img-fluid">
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 4 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center">
-                    <img src="img/img4.png" alt="Right click + Title Bar = Minimize window" class="img-fluid">
-                </div>
-                <div class="col-md-6 featureTextRight">
-                    <h4><b>Minimize window</b>：<br>Right click + Title Bar</h4>
-                    <p>
-                        Right click anywhere on the title bar to minimize the windows. No more aiming for the tiny minimize button.
-                    </p>
-                </div>
-            </div>
-            <hr>
-            <!-- Feature 5 -->
-            <div class="row justify-content-center">
-                <div class="col-md-6 featureTextLeft">
-                    <h4><b>Move pointer to "Close window"</b>：<br>Right click + taskbar button</h4>
-                    <p>
-                        Reduce the mouse movement. Convenient!
-                    </p>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="img/img5.png" alt="Right click + taskbar button = Move pointer to Close window" class="img-fluid">
-                </div>
-            </div>
-        </div>
-    </section>
+    - title: Purchase
+      section: purchase # DNT
 
+    - title: Support
+      section: support # DNT
 
+home:
+  section: home # DNT
+  sloganH1: Improve your productivity with simple clicks
+  sloganH2:
+    - text: Pin windows always-on-top with one click
+    - text: Quickly close windows
+    - text: and more!
+  more: Learn more
+  download: Download CClose
+  buy: Buy CClose Pro
 
-    <!-- Download section -->
-    <section id="download-section" class="py-5">
-        <div class="container py-5">
-            <h1 class="section-header">Download</h1>
-            <div class="row justify-content-center">
-                <div class="col-md-12 text-center">
-                    <h4>Windows Desktop Version</h4>
-                    <a href="https://github.com/chaohershi/cclose/releases/latest" target="_blank" class="btn btn-lg downloadButton">CClose 1.3.4.0 x64</a>
-                </div>
-            </div>
-        </div>
-    </section>
+features:
+  - title: >-
+      Toggle window always-on-top:
+    subtitle: Hold left click + Title bar
+    text: Want to make the windows always on top of the others? By holding the left click on the title bar of the desired window for one second! You can also pin several windows at the same time.
+    img: assets/img/img1.png
+    alt: Hold left click + Title bar = Toggle window always-on-top
+    nohr: true # DNT
 
-    <!-- Testimonial section -->
-    <section id="testimonial-section" class="bg-light text-muted py-5">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="section-header">Testimonials</h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="carousel slide" data-ride="carousel" id="quote-carousel">
+  - title: >-
+      Close active window:
+    subtitle: Double press + Esc key
+    text: Want to quickly the active window? No problem at all. Simply double press the ESC key.
+    img: assets/img/img2.png
+    alt: Double press + Esc key = Close active window
+    RTL: true # DNT, right to left
 
-                        <!-- Bottom Carousel Indicators -->
-                        <ol class="carousel-indicators">
-                            <li data-target="#quote-carousel" data-slide-to="0" class="active"></li>
-                            <li data-target="#quote-carousel" data-slide-to="1"></li>
-                            <li data-target="#quote-carousel" data-slide-to="2"></li>
-                            <li data-target="#quote-carousel" data-slide-to="3"></li>
-                        </ol>
+  - title: >-
+      Close window:
+    subtitle: Middle click + Title bar
+    text: Do you love the feature of quickly closing the tabs in the web browser by middle clicking? With CClose, we bring that feature to all the windows. Middle click on the title bar to close the window!
+    img: assets/img/img3.png
+    alt: Middle click + Title bar = Close window
 
-                        <!-- Carousel Slides / Quotes -->
-                        <div class="carousel-inner">
+  - title: >-
+      Minimize window:
+    subtitle: Right click + Title Bar
+    text: Right click anywhere on the title bar to minimize the windows. No more aiming for the tiny minimize button.
+    img: assets/img/img4.png
+    alt: Right click + Title Bar = Minimize window
+    RTL: true # DNT
 
-                            <!-- Quote 1 -->
-                            <div class="carousel-item active">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_male_1.png" alt="user_male_1" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>Using it right now. Very convenient for me who used to use the KDE. Thanks for the open-source and thanks for sharing it.</p>
-                                        <small>——spirit1431007</small>
+  - title: >-
+      Move pointer to "Close window":
+    subtitle: Right click + taskbar button
+    text: Reduce the mouse movement. Convenient!
+    img: assets/img/img5.png
+    alt: Right click + taskbar button = Move pointer to Close window
 
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Quote 2 -->
-                            <div class="carousel-item">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_female_1.png" alt="user_female_1" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>Really love this software. It's so convenient! And it gets the job done quietly without fancy bells and whistles!</p>
-                                        <small>——看到我请催我复习</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Quote 3 -->
-                            <div class="carousel-item">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_male_2.png" alt="user_male_2" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>Really great. I wish I could use this earlier. For my small-screen laptop, the feature of making a window always-on-top is so handy.</p>
-                                        <small>——enterhalf</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Quote 4 -->
-                            <div class="carousel-item">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3 text-center">
-                                        <img src="img/user_female_2.png" alt="user_female_2" class="rounded-circle" width="100px" height="100px">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><i class="fa fa-quote-left" aria-hidden="true" style="margin-right: 10px"></i>Thank you, super nice software! (￣▽￣)"</p>
-                                        <small>——草头将</small>
-                                    </div>
+download:
+  info: Windows Desktop Version
+  button: Download CClose
 
-                                </div>
-                            </div>
-                        </div>
+testimonials:
+  - slide: 0
+    img: assets/img/user_male_1.png
+    alt: user avatar
+    quote: Using it right now. Very convenient for me who is used to the KDE. Thanks for the open-source and thanks for sharing it.
+    author: —spirit1431007
 
-                        <!-- Carousel Buttons Next/Prev -->
-                        <a class="carousel-control carousel-control-prev" href="#quote-carousel" data-slide="prev">
-                            <i class="fa fa-chevron-left"></i>
-                        </a>
-                        <a class="carousel-control carousel-control-next" href="#quote-carousel" data-slide="next">
-                            <i class="fa fa-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  - slide: 1
+    img: assets/img/user_female_1.png
+    alt: user avatar
+    quote: Really love this software. It's so convenient! And it gets the job done quietly without fancy bells and whistles!
+    author: —看到我请催我复习
 
-    <!-- Purchase section -->
-    <section id="purchase-section" class="py-5">
-        <div class="container py-5">
-            <h1 class="section-header">Purchase</h1>
-            <!--Comparison table-->
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <table class="table table-bordered table-dark table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col">CClose</th>
-                                <th scope="col">CClose Pro</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Quickly close the window</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Quickly minimize the window</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Quickly pin the window always on top</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Quickly close the active window using the hotkey</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Quickly close the taskbar button</th>
-                                <td><i class="fas fa-check"></i></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Support windows without title bar</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Blacklist for close the active window</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Blacklist for quickly close the window*</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Hotkey for pin window always on top*</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Support the developer</th>
-                                <td></td>
-                                <td><i class="fas fa-check"></i>
-                                    <h7>&nbsp;</h7><i class="fas fa-heart"></i>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p>*In development</p>
-                    <div class="row justify-content-center">
-                        <div class="col-md-12 text-center py-3">
-                            <h4>Microsoft Store Version</h4>
-                            <div class="btn-group flex-wrap" data-toggle="buttons">
-                                <a href="https://www.microsoft.com/en-us/p/cclose-pro/9nzs8jpfz8hg" target="_blank" class="btn btn-lg downloadButton">Buy CClose Pro</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  - slide: 2
+    img: assets/img/user_male_2.png
+    alt: user avatar
+    quote: Really great. I wish I could use this earlier. For my small-screen laptop, the feature of making a window always-on-top is so handy.
+    author: —enterhalf
 
-    <!-- Support section -->
-    <section id="support-section" class="bg-light text-muted py-5">
-        <div class="container py-5">
-           <div class="row">
-               <div class="col-md-12">
-            <h1 class="section-header">Support</h1>
-            <p>If you have any suggestion or you encounter any problem when using CClose:<br>Please join the <a href="https://t.me/joinchat/J8RxqhpQ-Njw89enX3fSVw" target="_blank">telegram chat group</a> to give us your feedback.</p>
-             </div>
-           </div>
-        </div>
-    </section>
+  - slide: 3
+    img: assets/img/user_female_2.png
+    alt: user avatar
+    quote: Thank you, super nice software! (￣▽￣)"
+    author: —草头将
 
-    <!-- Footer -->
-    <footer id="main-footer" class="bg-dark">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 footerLeft">
-                    <p>Copyright &copy; <span id="year"></span> Chaohe Shi</p>
-                </div>
-                <div class="col-md-4 footerCenter">
-                    <a href="https://github.com/chaohershi/cclose" target="_blank" class="footerLink"><span class="fab fa-github" style="font-size:22px"></span></a>
-                </div>
-                <div class="col-md-4 footerRight">
-                    <a href="license.html" target="_blank" class="footerLink" style="margin-right: 5px">License Agreement & Privacy Policy</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+purchase:
+  thead:
+    - text:
+    - text: CClose
+    - text: CClose Pro
+  tbody:
+    - feature: Quickly pin windows always-on-top
+      forFree: true # DNT
+    - feature: Quickly close the active window by Esc key
+      forFree: true # DNT
+    - feature: Quickly close windows by middle click
+      forFree: true # DNT
+    - feature: Quickly minimize windows by right click
+      forFree: true # DNT
+    - feature: Quickly close taskbar buttons
+      forFree: true # DNT
 
-    <script>
-        // Get the current year for the copyright
-        $('#year').text(new Date().getFullYear());
+    - feature: Support windows without proper title bar
+    - feature: Blacklist for Esc key feature
+    - feature: Upcoming features *
+    - feature: Support the developer
+      addHeart: true # DNT
+  price:
+    text: Price
+    free:
+    pro: $3.89 USD **
+  info: Buy CClose Pro
+  img: assets/img/get_it_from_MS.svg
+  alt: Get it from Microsoft
+  notices:
+    - text: >-
+        * Starting from CClose 1.3, the free version will only receive bug fixes. All new features will only be available for the Pro version.
+        <br>** One-time payment, free updates included.
+    - text: If you have donated before September 2020, you can get 20% off, plus your donation can be converted into double-value coupon when buying CClose Pro. Please contact <a href="mailto">cclose.app@gmail.com</a> 😉
 
-        // Initalize Scrollspy
-        $('body').scrollspy({
-            target: '#main-nav'
-        });
+support:
+  - text: >-
+      Encounter any problem?
+      <br>- Please file an <a href="ghIssue">issue</a>. Thank you for your feedback.
+  - text: >-
+      Want to leave your testimonial?
+      <br>- You are more than welcome to rate and review CClose in the <a href="msStore">Microsoft Store</a>.
+      <br>- Or recommend CClose to your friends, let them know your testimonial.
+  - text: >-
+      Suggestions / feature requests? Other questions?
+      <br>- Join our <a href="tgGroupChat">Telegram user group</a>.
+      <br>- Or contact <a href="mailto">cclose.app@gmail.com</a>
 
-        // Smooth Scrolling
-        $("#main-nav a").on('click', function(event) {
-            if (this.hash !== "") {
-                event.preventDefault();
-
-                const hash = this.hash;
-
-                $('html, body').animate({
-                    scrollTop: $(hash).offset().top
-                }, 800, function() {
-
-                    window.location.hash = hash;
-                });
-            }
-        });
-
-        // Smooth Scrolling for Arrow Down
-        $("#learnMore").on('click', function(event) {
-            if (this.hash !== "") {
-                event.preventDefault();
-
-                const hash = this.hash;
-
-                $('html, body').animate({
-                    scrollTop: $(hash).offset().top
-                }, 800, function() {
-
-                    window.location.hash = hash;
-                });
-            }
-        });
-
-
-        // Closes responsive menu when a scroll trigger link is clicked
-        $(".js-scroll-trigger").click(function() {
-            $(".navbar-collapse").collapse("hide");
-        });
-
-        // Shrink and opaque Navbar
-        $(window).scroll(function() {
-            /* affix after scrolling 100px */
-            if ($(document).scrollTop() > 100) {
-                $('.navbar').addClass('affix');
-            } else {
-                $('.navbar').removeClass('affix');
-            }
-        });
-
-        // Add bg color for Navbar for sm screen
-        $(".navbar-toggler").click(function() {
-
-            $(".navbar").on('show.bs.collapse', function() {
-                $('.navbar').addClass('daffix');
-            });
-
-            $(".navbar").on('hide.bs.collapse', function() {
-                $('.navbar').removeClass('daffix');
-            });
-        });
-    </script>
-</body>
+footer:
+  copyright: Copyright &copy; 2018-<span id="year"></span> Chaohe Shi
+  license: License Agreement & Privacy Policy
+---
