@@ -16,11 +16,11 @@ LangFile := "lang.ini"
 ; set the script language
 if (A_Language == "0804") ; https://autohotkey.com/docs/misc/Languages.htm
 {
-Language := "Chinese"
+	Language := "Chinese"
 }
 else ; use English by default
 {
-Language := "English"
+	Language := "English"
 }
 
 ; set the script texts
@@ -30,6 +30,7 @@ IniRead, TEXT_Help, %LangFile%, %Language%, TEXT_Help, Help
 IniRead, TEXT_About, %LangFile%, %Language%, TEXT_About, About
 IniRead, TEXT_Exit, %LangFile%, %Language%, TEXT_Exit, Exit
 IniRead, TEXT_Update, %LangFile%, %Language%, TEXT_Update, Update
+IniRead, TEXT_Updater, %LangFile%, %Language%, TEXT_Updater, Updater
 IniRead, TEXT_Close, %LangFile%, %Language%, TEXT_Close, Close
 IniRead, TEXT_Checking_For_Updates, %LangFile%, %Language%, TEXT_Checking_For_Updates, Checking for updates...
 IniRead, TEXT_Updater_Not_Found, %LangFile%, %Language%, TEXT_Updater_Not_Found, Updater not found!
@@ -41,19 +42,30 @@ IniRead, TEXT_MenuTitleBarRightClick, %LangFile%, %Language%, TEXT_MenuTitleBarR
 IniRead, TEXT_MenuTitleBarHoldLeftClick, %LangFile%, %Language%, TEXT_MenuTitleBarHoldLeftClick, Hold left click on title bar to toggle window always on top
 IniRead, TEXT_MenuEscKeyDoublePress, %LangFile%, %Language%, TEXT_MenuEscKeyDoublePress, Double press Esc key to close active window
 IniRead, TEXT_MenuTaskbarButtonRightClick, %LangFile%, %Language%, TEXT_MenuTaskbarButtonRightClick, Right click on taskbar button to move pointer to "Close window"
-IniRead, TEXT_HelpMsg1, %LangFile%, %Language%, TEXT_HelpMsg1, Middle click   	+ title bar[1]  	= close window
-IniRead, TEXT_HelpMsg2, %LangFile%, %Language%, TEXT_HelpMsg2, Right click    	+ title bar[1]  	= minimize window[2]
-IniRead, TEXT_HelpMsg3, %LangFile%, %Language%, TEXT_HelpMsg3, Hold left click	+ title bar[1]  	= toggle window always on top
-IniRead, TEXT_HelpMsg4, %LangFile%, %Language%, TEXT_HelpMsg4, Double press   	+ Esc key       	= close active window
-IniRead, TEXT_HelpMsg5, %LangFile%, %Language%, TEXT_HelpMsg5, Right click    	+ taskbar button	= move pointer to "Close window"
-IniRead, TEXT_HelpMsg6, %LangFile%, %Language%, TEXT_HelpMsg6, [1] Few programs don't have proper GUIs. Either there isn't a title bar, or the whole interface is technically a giant title bar. In such cases, title bar related functions will not work as expected. You can solve this issue by adding those programs to the exception list in advanced settings.
-IniRead, TEXT_HelpMsg7, %LangFile%, %Language%, TEXT_HelpMsg7, [2] Hold right click for a normal right click.
-TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`n" . TEXT_HelpMsg4 . "`n" . TEXT_HelpMsg5 . "`n`n" . TEXT_HelpMsg6 . "`n`n" . TEXT_HelpMsg7
+IniRead, TEXT_HelpMsg1, %LangFile%, %Language%, TEXT_HelpMsg1, Middle click   	+ title bar[1][2]	= close window
+IniRead, TEXT_HelpMsg2, %LangFile%, %Language%, TEXT_HelpMsg2, Right click    	+ title bar[1][2]	= minimize window[3]
+IniRead, TEXT_HelpMsg3, %LangFile%, %Language%, TEXT_HelpMsg3, Hold left click	+ title bar[1][2]	= toggle window always on top
+IniRead, TEXT_HelpMsg4, %LangFile%, %Language%, TEXT_HelpMsg4, Double press   	+ Esc key        	= close active window
+IniRead, TEXT_HelpMsg5, %LangFile%, %Language%, TEXT_HelpMsg5, Right click    	+ taskbar button 	= move pointer to "Close window"
+IniRead, TEXT_HelpMsg6, %LangFile%, %Language%, TEXT_HelpMsg6, [1] If CClose is installed outside the default directory Program Files, you need to run it as administrator to manipulate high-privileged windows, e.g. the Task Manager.
+IniRead, TEXT_HelpMsg7, %LangFile%, %Language%, TEXT_HelpMsg7, [2] Few programs don't have proper GUIs. Either there isn't a title bar, or the whole interface is technically a giant title bar. In such cases, title bar related functions will not work as expected. You can solve this issue by adding those programs to the exception list in advanced settings (Pro version required).
+IniRead, TEXT_HelpMsg8, %LangFile%, %Language%, TEXT_HelpMsg8, [3] Hold right click for a normal right click.
+TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`n" . TEXT_HelpMsg4 . "`n" . TEXT_HelpMsg5 . "`n`n" . TEXT_HelpMsg6 . "`n`n" . TEXT_HelpMsg7 . "`n`n" . TEXT_HelpMsg8
 TEXT_AboutMsg := ScriptName . " " . ScriptVersion . "`n`n" . CopyrightNotice
+IniRead, TEXT_GetPro, %LangFile%, %Language%, TEXT_GetPro, Upgrade to Pro
+IniRead, TEXT_GetProMsg1, %LangFile%, %Language%, TEXT_GetProMsg1, Upgrade to CClose Pro to unlock extra features, including:
+IniRead, TEXT_GetProMsg2, %LangFile%, %Language%, TEXT_GetProMsg2, - Support windows without proper title bar
+IniRead, TEXT_GetProMsg3, %LangFile%, %Language%, TEXT_GetProMsg3, - Blacklist for Esc key feature
+IniRead, TEXT_GetProMsg4, %LangFile%, %Language%, TEXT_GetProMsg4, - Support the developer and future updates
+IniRead, TEXT_GetProMsg5, %LangFile%, %Language%, TEXT_GetProMsg5, Proceed to upgrade?
+TEXT_GetProMsg := TEXT_GetProMsg1 . "`n`n" . TEXT_GetProMsg2 . "`n" . TEXT_GetProMsg3 . "`n" . TEXT_GetProMsg4 . "`n`n" . TEXT_GetProMsg5
 
-IniRead, TEXT_AdvancedSettings, %LangFile%, %Language%, TEXT_AdvancedSettings, Advanced Settings
+IniRead, TEXT_AdvancedSettingsTrial, %LangFile%, %Language%, TEXT_AdvancedSettingsTrial, Advanced Settings (Trial)
+IniRead, TEXT_TrialNotice, %LangFile%, %Language%, TEXT_TrialNotice, Trial Notice
+IniRead, TEXT_TrialMsg, %LangFile%, %Language%, TEXT_TrialMsg, The trial version allows you to test out some selected Pro features. However, the settings you made will not be saved beyond the current session. If you enjoy using CClose, please consider upgrading to Pro for a small fee to support the developer and future updates, thank you!
 
 IniRead, TEXT_TitleBarExceptionList, %LangFile%, %Language%, TEXT_TitleBarExceptionList, Title Bar Exception List
+IniRead, TEXT_EscHotkeyBlackList , %LangFile%, %Language%, TEXT_EscHotkeyBlackList, Esc Hotkey Blacklist
 IniRead, TEXT_WindowInfo, %LangFile%, %Language%, TEXT_WindowInfo, Window Info
 IniRead, TEXT_Title, %LangFile%, %Language%, TEXT_Title, Title
 IniRead, TEXT_Class, %LangFile%, %Language%, TEXT_Class, Class
@@ -64,7 +76,7 @@ IniRead, TEXT_NotFrozen, %LangFile%, %Language%, TEXT_NotFrozen, (Hold Ctrl or S
 IniRead, TEXT_Frozen, %LangFile%, %Language%, TEXT_Frozen, (Updates suspended)
 IniRead, TEXT_BlackList, %LangFile%, %Language%, TEXT_BlackList, Blacklist
 IniRead, TEXT_ExceptionList, %LangFile%, %Language%, TEXT_ExceptionList, Exception List
-IniRead, TEXT_Add, %LangFile%, %Language%, TEXT_AddClass, Add
+IniRead, TEXT_Add, %LangFile%, %Language%, TEXT_Add, Add
 IniRead, TEXT_Delete, %LangFile%, %Language%, TEXT_Delete, Delete
 
 ; add the tray menu
@@ -80,11 +92,12 @@ Menu, SettingMenu, Add, %TEXT_MenuTitleBarHoldLeftClick%, ConfigSetting
 Menu, SettingMenu, Add, %TEXT_MenuEscKeyDoublePress%, ConfigSetting
 Menu, SettingMenu, Add, %TEXT_MenuTaskbarButtonRightClick%, ConfigSetting
 Menu, SettingMenu, Add
-Menu, SettingMenu, Add, %TEXT_AdvancedSettings%, ConfigAdvSetting
+Menu, SettingMenu, Add, %TEXT_AdvancedSettingsTrial%, ConfigAdvSetting
 Menu, Tray, Add, %TEXT_Settings%, :SettingMenu
 Menu, Tray, Add
 Menu, Tray, Add, %TEXT_Help%, ShowHelpMsg
 Menu, Tray, Add, %TEXT_About%, ShowAboutMsg
+Menu, Tray, Add, %TEXT_GetPro%, ShowGetProMsg
 Menu, Tray, Add
 Menu, Tray, Add, %TEXT_Exit%, ExitProgram
 Menu, Tray, Tip, %ScriptName% ; change the tray icon's tooltip
@@ -170,8 +183,9 @@ else ; else update the autostart setting
 	IniWrite, %IsAutostart%, %ConfigFile%, Autostart, EnableAutostart ; update the autostart setting
 }
 
-; retrieve the list of apps that have no title bars or entire GUI as title bars
-IniRead, TitleBarExceptionList, %ConfigFile%, Advanced, TitleBarExceptionList, %A_Space%
+; retrieve the advanced settings
+TitleBarExceptionList := ""
+EscHotkeyBlackList := ""
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Return ; end of the auto-execute section
@@ -286,16 +300,38 @@ else ; else display the about message
 	{
 		if FileExist("Updater.exe")
 		{
-			TrayTip, %ScriptName%, %TEXT_Checking_For_Updates%
-			Run %A_ScriptDir%\Updater.exe /A
-			Sleep, 1000
-			WinWait, ahk_exe Updater.exe, , 20
-			HideTrayTip() ; https://autohotkey.com/docs/commands/TrayTip.htm#Remarks
+			if WinExist(ScriptName . " ahk_exe Updater.exe") ; if the updater already exists
+			{
+				WinShow ; show the message window if it is hidden
+				WinActivate
+			}
+			else
+			{
+				Run, %A_ScriptDir%\Updater.exe
+			}
 		}
 		else
 		{
 			MsgBox, 48, %ScriptName%, %TEXT_Updater_Not_Found%
 		}
+	}
+}
+Return
+
+ShowGetProMsg:
+Process, Exist
+DetectHiddenWindows, On
+if WinExist(TEXT_GetPro . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if the get pro message already exists
+{
+	WinShow ; show the message window if it is hidden
+	WinActivate
+}
+else ; else display the get pro message
+{
+	MsgBox, 1, %TEXT_GetPro%, %TEXT_GetProMsg%
+	IfMsgBox, OK
+	{
+		Run, https://chaohershi.github.io/cclose/
 	}
 }
 Return
@@ -317,7 +353,7 @@ WM_COMMNOTIFY(wParam)
 		DetectHiddenWindows, On
 		if WinExist(TEXT_About . " ahk_class #32770 ahk_pid " . ErrorLevel)
 		{
-			ControlSetText, Button1, &%TEXT_Update%
+			ControlSetText, Button1, &%TEXT_Updater%
 			ControlSetText, Button2, &%TEXT_Close%
 		}
 	}
@@ -440,6 +476,14 @@ Return
 #If, true ; apply the following hotkey with no conditions
 ~Esc::
 WinGet, idOld, ID, A ; get the window id
+WinGet, exeName, ProcessName, A ; get the EXE name
+Loop, Parse, EscHotkeyBlackList, `|
+{
+	if (exeName == A_LoopField) ; if item already exists
+	{
+		Return
+	}
+}
 KeyWait, Esc ; wait for the Esc key to be released
 KeyWait, Esc, D, T0.4 ; wait for the Esc key to be pressed again
 if (ErrorLevel == 0)

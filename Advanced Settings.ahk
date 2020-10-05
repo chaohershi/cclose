@@ -7,20 +7,21 @@ if WinExist()
 }
 
 ; retrieve the title bar exception list
-IniRead, exceptionList, %ConfigFile%, Advanced, TitleBarExceptionList, %A_Space%
+exceptionList := TitleBarExceptionList
+blackList := EscHotkeyBlackList
 
 ; create advanced settings GUI
 Gui, 1:New, hwndhGui AlwaysOnTop
 Gui, 1:Default
 
 ; settings tab
-Gui, Add, Tab3, , %TEXT_TitleBarExceptionList%
+Gui, Add, Tab3, , %TEXT_TitleBarExceptionList%|%TEXT_EscHotkeyBlackList%
 
 ; title bar exception list
 Gui, Tab, 1
 
 Gui, Add, Edit, Section w240 r4 ReadOnly -VScroll -Wrap vCtrl_Title
-Gui, Add, Checkbox, w240 vCtrl_FollowMouse, %TEXT_FollowMouse%
+Gui, Add, Checkbox, w240 vCtrl_FollowMouse gUpdateCheckBox, %TEXT_FollowMouse%
 Gui, Add, Text, w240 r1 vCtrl_Freeze, %TEXT_NotFrozen%
 Gui, Add, Button, ys w75 h23 vAddItem gAddItem, %TEXT_Add%
 
@@ -31,14 +32,29 @@ Gui, Add, Button, ys w75 h23 vDeleteItem gDeleteItem, %TEXT_Delete%
 
 GBW2 := GroupBoxForTab3("GB2", TEXT_ExceptionList, 10, 10, "Ctrl_ListBox|DeleteItem")
 
+; esc hotkey exception list
+Gui, Tab, 2
+
+Gui, Add, Edit, Section w240 r4 ReadOnly -VScroll -Wrap vCtrl_Title2
+Gui, Add, Checkbox, w240 vCtrl_FollowMouse2 gUpdateCheckBox2, %TEXT_FollowMouse%
+Gui, Add, Text, w240 r1 vCtrl_Freeze2, %TEXT_NotFrozen%
+Gui, Add, Button, ys w75 h23 vAddItem2 gAddItem2, %TEXT_Add%
+
+GBW3 := GroupBoxForTab3("GB3", TEXT_WindowInfo, 10, 10, "Ctrl_Title2|Ctrl_FollowMouse2|Ctrl_Freeze2|AddItem2")
+
+Gui, Add, ListBox, Section xs AltSubmit r5 w240 vCtrl_ListBox2, %blackList%
+Gui, Add, Button, ys w75 h23 vDeleteItem2 gDeleteItem2, %TEXT_Delete%
+
+GBW4 := GroupBoxForTab3("GB4", TEXT_BlackList, 10, 10, "Ctrl_ListBox2|DeleteItem2")
+
 ; create hotkeys for suspending updates
 Hotkey, ~*Ctrl, StopUpdate, On
 Hotkey, ~*Shift, StopUpdate, On
 Hotkey, ~*Ctrl up, StartUpdate, On
 Hotkey, ~*Shift up, StartUpdate, On
-Gosub, Update ; make the first execution to be immediate https://www.autohotkey.com/docs/commands/SetTimer.htm#Remarks
+;Gosub, Update ; make the first execution to be immediate https://www.autohotkey.com/docs/commands/SetTimer.htm#Remarks
 SetTimer, Update, 250
-Gui, Show, NoActivate, %TEXT_AdvancedSettings%
+Gui, Show, NoActivate, %TEXT_AdvancedSettingsTrial%
 Return
 
 ; https://autohotkey.com/board/topic/71065-groupbox-addwrap-around-existing-controls/
@@ -58,6 +74,31 @@ GroupBoxForTab3(GBvName, Title, TitleH, Margin, Piped_CtrlvNames, FixedWidth := 
 	Gui, Add, GroupBox, v%GBvName% x%minX% y%minY% w%GBW% h%GBH%, %Title% ; add the GroupBox
 	Return, GBW
 }
+
+; synchronize two check boxes
+UpdateCheckBox:
+GuiControlGet, Ctrl_FollowMouse
+if Ctrl_FollowMouse
+{
+	GuiControl, , Ctrl_FollowMouse2, 1
+}
+else
+{
+	GuiControl, , Ctrl_FollowMouse2, 0
+}
+Return
+
+UpdateCheckBox2:
+GuiControlGet, Ctrl_FollowMouse2
+if Ctrl_FollowMouse2
+{
+	GuiControl, , Ctrl_FollowMouse, 1
+}
+else
+{
+	GuiControl, , Ctrl_FollowMouse, 0
+}
+Return
 
 AddItem:
 if (exeItem == "") ; don't add empty item
@@ -89,6 +130,36 @@ Gosub, Save
 GuiControl, , Ctrl_ListBox, %exeItem%|| ; add the item to the ListBox and select it
 Return
 
+AddItem2:
+if (exeItem == "") ; don't add empty item
+{
+	Return
+}
+else
+{
+	Loop, Parse, blackList, `|
+	{
+		if (exeItem == A_LoopField) ; if item already exists
+		{
+			GuiControl, Choose, Ctrl_ListBox2, %A_Index% ; select the existed item instead
+			Return
+		}
+	}
+}
+; add item
+if (blackList == "")
+{
+	blackList .= exeItem
+}
+else
+{
+	blackList .= "|"
+	blackList .= exeItem
+}
+Gosub, Save
+GuiControl, , Ctrl_ListBox2, %exeItem%|| ; add the item to the ListBox and select it
+Return
+
 DeleteItem:
 Gui %hGui%:Submit, NoHide
 newList := ""
@@ -108,10 +179,29 @@ GuiControl, , Ctrl_ListBox, |%exceptionList% ; construct new ListBox
 GuiControl, Choose, Ctrl_ListBox, %Ctrl_ListBox% ; select the item below the deleted one
 Return
 
+DeleteItem2:
+Gui %hGui%:Submit, NoHide
+newList := ""
+Loop, Parse, blackList, `|
+{
+	if (A_Index == Ctrl_ListBox2)
+	{
+		Continue
+	}
+	newList := newList . A_LoopField . "|"
+	
+}
+newList := SubStr(newList, 1, -1) ; remove the trailing delimiter
+blackList := newList
+Gosub, Save
+GuiControl, , Ctrl_ListBox2, |%blackList% ; construct new ListBox
+GuiControl, Choose, Ctrl_ListBox2, %Ctrl_ListBox2% ; select the item below the deleted one
+Return
+
 Save:
 Gosub, EnsureConfigDirExists
-IniWrite, %exceptionList%, %ConfigFile%, Advanced, TitleBarExceptionList ; update the exception list setting
 TitleBarExceptionList := exceptionList
+EscHotkeyBlackList := blackList
 Return
 
 GuiSize:
@@ -120,7 +210,7 @@ SetTimer, Update, % A_EventInfo == 1 ? "Off" : "On" ; suspend on minimize
 Return
 
 Update:
-Gui %hGui%:Default
+;Gui %hGui%:Default
 GuiControlGet, Ctrl_FollowMouse
 CoordMode, Mouse, Screen
 MouseGetPos, msX, msY, msWin, msCtrl
@@ -138,17 +228,20 @@ else
 }
 WinGetTitle, t1
 WinGetClass, t2
-if (curWin == hGui || t2 == "MultitaskingViewFrame") ; our Gui || Alt-tab
+if (curWin == hGui || t2 == "MultitaskingViewFrame") ; Our Gui || Alt-tab
 {
 	UpdateText("Ctrl_Freeze", TEXT_Frozen)
+	UpdateText("Ctrl_Freeze2", TEXT_Frozen)
 	Return
 }
 UpdateText("Ctrl_Freeze", TEXT_NotFrozen)
+UpdateText("Ctrl_Freeze2", TEXT_NotFrozen)
 WinGet, t3, ProcessName
 WinGet, t4, PID
 ;classItem := t2
 exeItem := t3
 UpdateText("Ctrl_Title", "Title " t1 "`nClass " t2 "`nEXE " t3 "`nPID " t4)
+UpdateText("Ctrl_Title2", "Title " t1 "`nClass " t2 "`nEXE " t3 "`nPID " t4)
 CoordMode, Mouse, Relative
 CoordMode, Mouse, Client
 Return
@@ -158,8 +251,19 @@ Hotkey, ~*Ctrl, Off
 Hotkey, ~*Shift, Off
 Hotkey, ~*Ctrl up, Off
 Hotkey, ~*Shift up, Off
-SetTimer, Update, Off
+SetTimer, Update, Delete
 Gui %hGui%:Destroy
+Process, Exist
+DetectHiddenWindows, On
+if WinExist(TEXT_TrialNotice . " ahk_class #32770 ahk_pid " . ErrorLevel) ; if the trial message already exists
+{
+	WinShow ; show the message window if it is hidden
+	WinActivate
+}
+else ; else display the trial message
+{
+	MsgBox, 0, %TEXT_TrialNotice%, %TEXT_TrialMsg%
+}
 Return
 
 WinGetTextFast(detect_hidden)
@@ -204,6 +308,7 @@ StopUpdate:
 ;}
 SetTimer, Update, Off
 UpdateText("Ctrl_Freeze", TEXT_Frozen)
+UpdateText("Ctrl_Freeze2", TEXT_Frozen)
 Return
 
 StartUpdate:
@@ -214,4 +319,3 @@ StartUpdate:
 ;}
 SetTimer, Update, On
 Return
-
