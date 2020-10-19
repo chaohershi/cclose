@@ -1,11 +1,11 @@
 #NoEnv ; recommended for performance and compatibility with future AutoHotkey releases
-#SingleInstance ignore ; allow only one instance of this script to be running
+#SingleInstance force ; allow only one instance of this script to be running
 ;#Warn ; enable warnings to assist with detecting common errors
 SendMode Input ; recommended for new scripts due to its superior speed and reliability
 SetWorkingDir %A_ScriptDir% ; ensure a consistent starting directory
 
 ScriptName := "CClose"
-ScriptVersion := "1.4.0.0"
+ScriptVersion := "1.4.1.0"
 CopyrightNotice := "Copyright (c) 2018-2020 Chaohe Shi"
 
 ConfigDir := A_AppData . "\" . ScriptName
@@ -56,9 +56,10 @@ IniRead, TEXT_GetPro, %LangFile%, %Language%, TEXT_GetPro, Upgrade to Pro
 IniRead, TEXT_GetProMsg1, %LangFile%, %Language%, TEXT_GetProMsg1, Upgrade to CClose Pro to unlock extra features, including:
 IniRead, TEXT_GetProMsg2, %LangFile%, %Language%, TEXT_GetProMsg2, - Support windows without proper title bar
 IniRead, TEXT_GetProMsg3, %LangFile%, %Language%, TEXT_GetProMsg3, - Blacklist for Esc key feature
-IniRead, TEXT_GetProMsg4, %LangFile%, %Language%, TEXT_GetProMsg4, - Support the developer and future updates
-IniRead, TEXT_GetProMsg5, %LangFile%, %Language%, TEXT_GetProMsg5, Proceed to upgrade?
-TEXT_GetProMsg := TEXT_GetProMsg1 . "`n`n" . TEXT_GetProMsg2 . "`n" . TEXT_GetProMsg3 . "`n" . TEXT_GetProMsg4 . "`n`n" . TEXT_GetProMsg5
+IniRead, TEXT_GetProMsg4, %LangFile%, %Language%, TEXT_GetProMsg4, - Change window transparency
+IniRead, TEXT_GetProMsg5, %LangFile%, %Language%, TEXT_GetProMsg5, - Support the developer and future updates
+IniRead, TEXT_GetProMsg6, %LangFile%, %Language%, TEXT_GetProMsg6, Proceed to upgrade?
+TEXT_GetProMsg := TEXT_GetProMsg1 . "`n`n" . TEXT_GetProMsg2 . "`n" . TEXT_GetProMsg3 . "`n" . TEXT_GetProMsg4 . "`n" . TEXT_GetProMsg5 . "`n`n" . TEXT_GetProMsg6
 
 IniRead, TEXT_AdvancedSettingsTrial, %LangFile%, %Language%, TEXT_AdvancedSettingsTrial, Advanced Settings (Trial)
 IniRead, TEXT_TrialNotice, %LangFile%, %Language%, TEXT_TrialNotice, Trial Notice

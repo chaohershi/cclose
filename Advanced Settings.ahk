@@ -48,6 +48,7 @@ Gui, Add, Button, ys w75 h23 vDeleteItem2 gDeleteItem2, %TEXT_Delete%
 GBW4 := GroupBoxForTab3("GB4", TEXT_BlackList, 10, 10, "Ctrl_ListBox2|DeleteItem2")
 
 ; create hotkeys for suspending updates
+Hotkey, If, true ; define the scope for the following Hotkey commands, see https://github.com/chaohershi/cclose/issues/7
 Hotkey, ~*Ctrl, StopUpdate, On
 Hotkey, ~*Shift, StopUpdate, On
 Hotkey, ~*Ctrl up, StartUpdate, On
@@ -247,6 +248,7 @@ CoordMode, Mouse, Client
 Return
 
 GuiClose:
+Hotkey, If, true
 Hotkey, ~*Ctrl, Off
 Hotkey, ~*Shift, Off
 Hotkey, ~*Ctrl up, Off
