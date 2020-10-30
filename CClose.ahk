@@ -54,7 +54,7 @@ TEXT_HelpMsg := TEXT_HelpMsg1 . "`n" . TEXT_HelpMsg2 . "`n" . TEXT_HelpMsg3 . "`
 TEXT_AboutMsg := ScriptName . " " . ScriptVersion . "`n`n" . CopyrightNotice
 IniRead, TEXT_GetPro, %LangFile%, %Language%, TEXT_GetPro, Upgrade to Pro
 IniRead, TEXT_GetProMsg1, %LangFile%, %Language%, TEXT_GetProMsg1, Upgrade to CClose Pro to unlock extra features, including:
-IniRead, TEXT_GetProMsg2, %LangFile%, %Language%, TEXT_GetProMsg2, - Support windows without proper title bar
+IniRead, TEXT_GetProMsg2, %LangFile%, %Language%, TEXT_GetProMsg2, - Support windows without a proper title bar
 IniRead, TEXT_GetProMsg3, %LangFile%, %Language%, TEXT_GetProMsg3, - Blacklist for Esc key feature
 IniRead, TEXT_GetProMsg4, %LangFile%, %Language%, TEXT_GetProMsg4, - Change window transparency
 IniRead, TEXT_GetProMsg5, %LangFile%, %Language%, TEXT_GetProMsg5, - Support the developer and future updates
